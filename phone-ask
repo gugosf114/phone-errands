@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""phone-ask: the AI phones a place, asks 2-3 plain questions, brings the answers back.
+
+  phone-ask "+14155551234" "Ace Hardware on Mission" "Are you open Sunday?" "Do you sell propane?"
+  phone-ask --last            # show last call: answers + transcript
+  phone-ask --dry ...         # print the request, place no call
+  phone-ask --balance         # dollars left on Bland
+"""
+import json, os, sys, time, urllib.request
+
+BASE = "https://api.bland.ai/v1"
+HOME = "/root/.bland"
+KEY = open(f"{HOME}/key").read().strip()
+GEORGE_CELL = "+14156328008"
+
+
+def api(method, path, body=None, timeout=30):
+    req = urllib.request.Request(BASE + path, method=method,
+                                 headers={"authorization": KEY, "Content-Type": "application/json", "User-Agent": "curl/8.5.0", "Accept": "*/*"},
+                                 data=json.dumps(body).encode() if body is not None else None)
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode())
+
+
+def money():
+    return api("GET", "/me")["billing"]["current_balance"]
+
+
+def build_request(number, who, questions):
+    qs = "\n".join(f"{i+1}. {q}" for i, q in enumerate(questions))
+    task = f"""You are a polite, brief assistant making a phone call for George. You are calling {who}.
+Your only job: get answers to the questions below, then end the call.
+
+Rules:
+- Ask ONE question at a time. Wait for the answer. Then ask the next one.
+- If they do not know, ask if someone else there can answer. If not, accept "I don't know" and move on.
+- Never make up facts. Never share anything about George beyond his first name.
+- If you reach a phone menu, pick the option for a person or general questions. If there is none, press 0.
+- If asked who you are, say: "I'm an AI assistant calling for George."
+- When every question is answered, say "That's all, thank you so much, have a good one" and end the call.
+- Keep every sentence short. Do not chit-chat.
+
+Questions:
+{qs}"""
+    return {
+        "phone_number": number,
+        "task": task,
+        "first_sentence": "Hi! Quick heads up, this call may be recorded. I'm calling for George with a couple of quick questions. Is now okay?",
+        "wait_for_greeting": True,
+        "voice": "maya",
+        "record": False,
+        "max_duration": 5,
+        "voicemail": {"action": "hangup"},
+        "summary_prompt": "One or two plain sentences: who answered and what they said.",
+        "metadata": {"tool": "phone-ask", "who": who},
+    }
+
+
+def wait_done(call_id, max_s=480):
+    t0 = time.time()
+    while time.time() - t0 < max_s:
+        d = api("GET", f"/calls/{call_id}")
+        if d.get("completed") or d.get("status") in ("completed", "failed", "no-answer", "busy"):
+            return d
+        time.sleep(5)
+    return api("GET", f"/calls/{call_id}")
+
+
+def answers_for(call_id, who, questions):
+    body = {"goal": f"Find out the answers to George's questions from {who}.",
+            "questions": [[q, "string"] for q in questions]}
+    try:
+        r = api("POST", f"/calls/{call_id}/analyze", body, timeout=90)
+    except Exception as e:
+        return [f"(analysis failed: {e})"] * len(questions)
+    ans = r.get("answers") or r.get("analysis") or []
+    if isinstance(ans, dict):
+        ans = list(ans.values())
+    return [str(a) if a not in (None, "") else "(no answer)" for a in ans] + ["(no answer)"] * (len(questions) - len(ans))
+
+
+def fmt_len(mins):
+    s = int(round((mins or 0) * 60))
+    return f"{s//60}m {s%60:02d}s"
+
+
+def report(rec, show_transcript=False):
+    d, qs, ans = rec["call"], rec["questions"], rec["answers"]
+    by = d.get("answered_by") or "unknown"
+    who_line = {"human": "a person answered", "voicemail": "voicemail, nobody picked up",
+                "no-answer": "no answer", "unknown": "unclear who answered"}.get(by, by)
+    print(f"Called {rec['who']} {rec['number']} — {who_line}. {fmt_len(d.get('call_length'))}, ${d.get('price') or 0:.2f}.")
+    if by != "voicemail":
+        for i, (q, a) in enumerate(zip(qs, ans)):
+            print(f"{i+1}. {q} → {a}")
+        if d.get("summary"):
+            print(f"Summary: {d['summary']}")
+    if show_transcript:
+        print("--- transcript ---")
+        print(d.get("concatenated_transcript") or "(none)")
+
+
+def main(argv):
+    if not argv or argv[0] in ("-h", "--help"):
+        print(__doc__); return 0
+    if argv[0] == "--balance":
+        print(f"${money():.2f} left on Bland"); return 0
+    if argv[0] == "--last":
+        p = f"{HOME}/last_call_id"
+        cid = open(p).read().strip()
+        recp = f"{HOME}/calls/{cid}.json"
+        if os.path.exists(recp):
+            report(json.load(open(recp)), show_transcript=True)
+        else:
+            d = api("GET", f"/calls/{cid}")
+            print(json.dumps({k: d.get(k) for k in ("status", "answered_by", "call_length", "price", "summary")}, indent=1))
+            print(d.get("concatenated_transcript") or "")
+        return 0
+    dry = False
+    if argv[0] == "--dry":
+        dry = True; argv = argv[1:]
+    if len(argv) < 3:
+        print("need: number, who, and at least one question"); return 2
+    number, who, questions = argv[0], argv[1], argv[2:]
+    if len(questions) > 4:
+        print("max 4 questions — people hang up after that"); return 2
+    body = build_request(number, who, questions)
+    if dry:
+        print(json.dumps(body, indent=1)); return 0
+    before = money()
+    r = api("POST", "/calls", body)
+    cid = r.get("call_id")
+    if not cid:
+        print("Bland refused the call:", json.dumps(r)); return 1
+    open(f"{HOME}/last_call_id", "w").write(cid)
+    print(f"Dialing {who} {number} … (call {cid[:8]})", flush=True)
+    d = wait_done(cid)
+    ans = answers_for(cid, who, questions) if d.get("answered_by") != "voicemail" else []
+    rec = {"number": number, "who": who, "questions": questions, "answers": ans, "call": d,
+           "when": time.strftime("%Y-%m-%d %H:%M %Z")}
+    json.dump(rec, open(f"{HOME}/calls/{cid}.json", "w"), indent=1)
+    report(rec)
+    after = money()
+    print(f"Balance left: ${after:.2f} (this call ${before-after:.2f})")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

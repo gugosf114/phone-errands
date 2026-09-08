@@ -1,0 +1,13 @@
+who: Example Utility billing
+number: +14156328008
+goal: get the $35 late fee removed from the account
+facts:
+- account number 1234-5678
+- name on account: Gurgen Abrahamyants (goes by George)
+- service address: Daly City, CA
+- customer for 6 years, first late payment ever
+limits:
+- no new charges, no plan changes
+- never give a social security number or a card number
+fallback: if refused, ask once for a supervisor or a one-time courtesy credit
+minutes: 12

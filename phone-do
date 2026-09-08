@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+"""phone-do: George's speaking device runs a phone errand from an errand card.
+
+  phone-do card.txt          # place the call, wait, report
+  phone-do --dry card.txt    # show the exact call plan, place no call
+  phone-do --last            # last errand: result + transcript
+
+Errand card (plain text):
+  who: Comcast billing
+  number: +18005551234
+  goal: get the $35 late fee removed from the account
+  facts:
+  - account number 1234-5678
+  - name on account: Gurgen Abrahamyants (goes by George)
+  - customer since 2019, first late payment ever
+  limits:
+  - no new charges, no plan changes
+  - never give a social security number
+  fallback: if refused, ask once for a supervisor or a one-time courtesy credit
+  minutes: 12
+  voice: ryan
+"""
+import json, os, sys, time, urllib.request
+
+BASE = "https://api.bland.ai/v1"
+HOME = "/root/.bland"
+KEY = open(f"{HOME}/key").read().strip()
+DEFAULT_VOICE = "ryan"      # Professional American Male
+DEFAULT_MINUTES = 12
+
+DISCLOSURE = "I'm George's assistant, calling on his behalf. He authorized me to handle this and gave me his account details."
+
+QUESTIONS = [
+    "Was George's goal achieved? Answer yes, no, or partly, then one sentence on what was agreed.",
+    "What confirmation number, reference number, or representative name was given?",
+    "What, if anything, must George do next?",
+    "Did they refuse to deal with a representative and insist on the account holder? yes or no, and what they asked for.",
+]
+
+
+def api(method, path, body=None, timeout=30):
+    req = urllib.request.Request(BASE + path, method=method,
+        headers={"authorization": KEY, "Content-Type": "application/json", "User-Agent": "curl/8.5.0", "Accept": "*/*"},
+        data=json.dumps(body).encode() if body is not None else None)
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode())
+
+
+def money():
+    return api("GET", "/me")["billing"]["current_balance"]
+
+
+def parse_card(path):
+    card = {"facts": [], "limits": []}
+    section = None
+    for raw in open(path, encoding="utf-8"):
+        line = raw.rstrip("\n")
+        if not line.strip():
+            continue
+        if line.startswith("- ") and section in ("facts", "limits"):
+            card[section].append(line[2:].strip()); continue
+        if ":" in line:
+            k, v = line.split(":", 1); k = k.strip().lower(); v = v.strip()
+            if k in ("facts", "limits"):
+                section = k
+                if v: card[k].append(v)
+            else:
+                section = None; card[k] = v
+    for need in ("who", "number", "goal"):
+        if not card.get(need):
+            sys.exit(f"card is missing '{need}:'")
+    return card
+
+
+def build_request(card):
+    facts = "\n".join(f"- {f}" for f in card["facts"]) or "- (none given)"
+    limits = "\n".join(f"- {l}" for l in card["limits"])
+    fallback = card.get("fallback", "if refused, ask once for a supervisor or a one-time courtesy")
+    task = f"""You are George's assistant. You make his phone calls for him as his authorized representative. You never claim to be George. Never mention anything about George's health or why he does not call himself. If asked who you are, say: "{DISCLOSURE}" If sincerely asked whether you are a real person or an AI, answer honestly in one short sentence and move on.
+
+You are calling {card['who']}.
+George's goal for this call: {card['goal']}
+
+Facts George gave you. Use only these. Never invent a fact:
+{facts}
+
+Limits. Never cross these:
+- Never agree to anything that costs money unless it is part of the goal above.
+- Never share a fact that is not listed above. If asked for something you do not have, say: "I don't have that with me. George can send it in writing."
+- Never say you are George or a human.
+{limits}
+
+How to run the call:
+- Phone menu: choose billing, account, or representative. Press 0 if stuck. On hold, wait quietly and say nothing.
+- Recorded announcements and hold music are not people. Speak only when a live person greets you.
+- When a live person answers, first say: "Hi, quick heads up, this call may be recorded." Then: "This is George's assistant, calling about his account," and the reason, in one short sentence.
+- If asked to verify, give the account facts listed above.
+- If told they must speak with the account holder: say once that George authorized you, then ask if they can verify with the account details or note the authorization on the account. If still refused, ask exactly which form or step adds an authorized person to the account, write down the answer, thank them, and end the call.
+- Work toward the goal politely and firmly. {fallback}. Accept a final no gracefully.
+- Before ending, get a confirmation number or the representative's name. If they offer to email a confirmation and George's email is in the facts, give it.
+- Short sentences. One question at a time. No chit-chat."""
+    return {
+        "phone_number": card["number"],
+        "task": task,
+        "first_sentence": "Hi, quick heads up, this call may be recorded. This is George's assistant, calling about his account.",
+        "wait_for_greeting": True,
+        "voice": card.get("voice", DEFAULT_VOICE),
+        "record": False,
+        "max_duration": int(card.get("minutes", DEFAULT_MINUTES)),
+        "voicemail": {"action": "hangup"},
+        "summary_prompt": "Two plain sentences: what happened on the call and what was agreed.",
+        "metadata": {"tool": "phone-do", "who": card["who"], "goal": card["goal"][:80]},
+    }
+
+
+def wait_done(call_id, max_s=1500):
+    t0 = time.time()
+    while time.time() - t0 < max_s:
+        d = api("GET", f"/calls/{call_id}")
+        if d.get("completed") or d.get("status") in ("completed", "failed", "no-answer", "busy"):
+            return d
+        time.sleep(6)
+    return api("GET", f"/calls/{call_id}")
+
+
+def answers_for(call_id, card):
+    body = {"goal": f"Report whether George's goal was met: {card['goal']}",
+            "questions": [[q, "string"] for q in QUESTIONS]}
+    try:
+        r = api("POST", f"/calls/{call_id}/analyze", body, timeout=120)
+        ans = r.get("answers") or []
+    except Exception as e:
+        ans = [f"(analysis failed: {e})"]
+    return [str(a) if a not in (None, "") else "(no answer)" for a in ans] + ["(no answer)"] * (len(QUESTIONS) - len(ans))
+
+
+def fmt_len(mins):
+    s = int(round((mins or 0) * 60)); return f"{s//60}m {s%60:02d}s"
+
+
+def report(rec, transcript=False):
+    d, ans = rec["call"], rec["answers"]
+    by = d.get("answered_by") or "unknown"
+    print(f"Errand: {rec['card']['goal']}")
+    print(f"Called {rec['card']['who']} {rec['card']['number']} — answered by {by}. {fmt_len(d.get('call_length'))}, ${d.get('price') or 0:.2f}.")
+    if by == "voicemail":
+        print("Voicemail. Nobody picked up. Nothing was left."); return
+    labels = ["Result", "Confirmation", "George must", "Refused a representative"]
+    for lab, a in zip(labels, ans):
+        print(f"{lab}: {a}")
+    if d.get("summary"): print(f"Summary: {d['summary']}")
+    if transcript:
+        print("--- transcript ---"); print(d.get("concatenated_transcript") or "(none)")
+
+
+def main(argv):
+    if not argv or argv[0] in ("-h", "--help"):
+        print(__doc__); return 0
+    if argv[0] == "--last":
+        cid = open(f"{HOME}/last_errand_id").read().strip()
+        report(json.load(open(f"{HOME}/errands/{cid}.json")), transcript=True); return 0
+    dry = argv[0] == "--dry"
+    path = argv[1] if dry else argv[0]
+    card = parse_card(path)
+    body = build_request(card)
+    if dry:
+        print(f"TO: {card['who']} {card['number']}  VOICE: {body['voice']}  CAP: {body['max_duration']} min (max ${body['max_duration']*0.14:.2f})")
+        print(f"OPENS WITH: {body['first_sentence']}\n"); print(body["task"]); return 0
+    before = money()
+    r = api("POST", "/calls", body)
+    cid = r.get("call_id")
+    if not cid:
+        print("Bland refused the call:", json.dumps(r)); return 1
+    open(f"{HOME}/last_errand_id", "w").write(cid)
+    open(f"{HOME}/last_call_id", "w").write(cid)
+    print(f"Dialing {card['who']} {card['number']} … (call {cid[:8]}, cap {body['max_duration']} min)", flush=True)
+    d = wait_done(cid)
+    ans = answers_for(cid, card) if d.get("answered_by") != "voicemail" else []
+    rec = {"card": card, "answers": ans, "call": d, "when": time.strftime("%Y-%m-%d %H:%M %Z")}
+    json.dump(rec, open(f"{HOME}/errands/{cid}.json", "w"), indent=1)
+    report(rec)
+    after = money()
+    print(f"Balance left: ${after:.2f} (this call ${before-after:.2f})")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
