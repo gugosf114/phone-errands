@@ -24,11 +24,13 @@ import json, os, sys, time, urllib.request
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from assistant_records import receipt
+from voice_catalog import resolve_call_voice
+from speech_text import SPEECH_GUIDANCE, pronunciation_guide
 
 BASE = "https://api.bland.ai/v1"
 HOME = "/root/.bland"
 
-DEFAULT_VOICE = "ryan"      # Professional American Male
+DEFAULT_VOICE = None      # selected from the shared voice catalog
 DEFAULT_MINUTES = 12
 
 QUESTIONS = [
@@ -91,6 +93,9 @@ Limits. Never cross these:
 - Use George’s supplied identity and account facts accurately.
 {limits}
 
+Speech:
+{SPEECH_GUIDANCE}
+
 How to run the call:
 - Phone menu: choose billing, account, or representative. Press 0 if stuck. On hold, wait quietly and say nothing.
 - Recorded announcements and hold music are not people. Speak only when a live person greets you.
@@ -105,7 +110,8 @@ How to run the call:
         "task": task,
         "first_sentence": "Hi, this is George. I’m calling about my account.",
         "wait_for_greeting": True,
-        "voice": card.get("voice", DEFAULT_VOICE),
+        "voice": resolve_call_voice(card.get("voice", DEFAULT_VOICE)),
+        "pronunciation_guide": pronunciation_guide(card["facts"]),
         "record": False,
         "max_duration": int(card.get("minutes", DEFAULT_MINUTES)),
         "voicemail": {"action": "hangup"},

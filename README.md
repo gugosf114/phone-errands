@@ -145,7 +145,8 @@ The earlier text-based turn timings remain Vapi defaults: punctuation `0.1` seco
 - Moved the personal processes to a dedicated native Termux tmux server.
 - Added the shared terminal entrypoint, support-chat route, and call/chat receipts.
 - Set phone and support-chat interactions with other people to first-person speech as George.
-- Preserved Sonnet 5 and Ava as the voice configuration.
+- Preserved Sonnet 5 and Ava for the personal conversation with George.
+- Added George Natural as the default voice for outgoing errands, plus local Majestic George previews and digit-by-digit account-number speech.
 
 A recorded personal call before these timing changes averaged `2.0385` seconds per reply across two turns. Its model component averaged `1.1365` seconds; its voice component averaged `0.568` seconds. Source: Vapi call `01a17b79-b49d-7118-a530-0ef27d721dea`.
 
@@ -156,7 +157,7 @@ A recorded personal call before these timing changes averaged `2.0385` seconds p
 | Setting | `phone-ask` | `phone-do` |
 |---|---|---|
 | Opening | “Hi, this is George. I have a couple of quick questions.” | “Hi, this is George. I’m calling about my account.” |
-| Voice | `maya` | `ryan` by default; card can choose `voice` |
+| Voice | `george-natural`, the saved Bland clone | `george-natural` by default; card can choose `voice` |
 | Question count | Up to four | Goal-driven conversation |
 | Call duration cap | Five minutes | Twelve minutes by default; card can set `minutes` |
 | Greeting | Wait for the recipient | Wait for the recipient |
@@ -170,6 +171,36 @@ The repo’s original cost estimate was `$0.14` per connected minute. Actual rec
 Goal cards use `who`, `goal`, `facts`, `limits`, and `fallback`. Phone cards also use `number`; support-chat cards can use `url`. The `limits` field holds George’s instructions for that errand, such as keeping a current subscription plan. The code also applies the call-duration and question-count values shown above.
 
 Examples: [late-fee card](errands/example-late-fee.txt), [store questions](errands/example-store-question.txt), [support chat](errands/example-support-chat.txt).
+
+## George’s voices and number speech
+
+Two voice choices are saved in [config/voices.json](config/voices.json):
+
+| Voice | Use |
+|---|---|
+| `george-natural` | Bland clone made from George’s accepted training recordings; default for both outgoing calling commands |
+| `majestic-george` | George’s trained Piper model, rendered locally by `assistant voice` |
+
+The voice assets were copied from WiM Calls into `/root/.local/share/phone-errands-voices`. The copy contains the Piper model and config, 151 accepted reading takes, and the reference sample used for the Bland clone. [config/voice-assets.json](config/voice-assets.json) records each asset’s size and SHA-256 hash. The private `voice-assets-2026-10-27` GitHub release stores the asset archive.
+
+The number-speaking code derives from WiM Calls’ `sayable` function. It reads account numbers, verification codes, last-four digits, and phone numbers digit by digit, preserving leading zeros and groups. Money, years, and ordinary quantities keep their normal reading. The local Piper renderer expands currency into explicit dollars and cents. Account facts also become a Bland pronunciation guide.
+
+The Bland account accepted George Natural and rejected a second clone with its account voice-limit response. Majestic George remains available through local synthesis. Bland documents a $5 cumulative wallet top-up to expand clone slots.
+
+Both generated previews are saved under `samples/`. [samples/verification.json](samples/verification.json) holds their audio hashes and transcribed words. Their sample text uses example account `0042`, a `$35` charge, and year `2026`. Automated transcription checks the spoken words against that text. Twelve focused checks cover leading zeros, years, money, grouping, call voice selection, and pronunciation-guide construction.
+
+```sh
+assistant voice --voice majestic-george --text "My account number is 0042." --out /tmp/majestic.wav
+assistant voice --voice george-natural --text "My account number is 0042." --out /tmp/natural.wav
+```
+
+Restore local voice assets inside Debian after downloading the private release archive:
+
+```sh
+python3 scripts/restore-voice-assets.py george-voice-assets-20261027.tar.gz
+python3 -m venv /root/.local/share/phone-errands-voices/venv
+/root/.local/share/phone-errands-voices/venv/bin/pip install -r config/voice-requirements.txt
+```
 
 ## Commands
 
@@ -212,7 +243,7 @@ Runtime dependencies: native Termux, Debian PRoot, Python 3, Node.js 20, Bash, c
 |---|---|
 | `voice/` | HTTP bridge, queue, Claude transcript reader, job ledger, and process control |
 | `phone-ask`, `phone-do` | Bland calling commands |
-| `assistant`, `support-chat`, `assistant_records.py` | Shared work entrypoints and receipts |
+| `assistant`, `support-chat`, `assistant_records.py`, `voice_catalog.py`, `speech_text.py` | Shared work entrypoints and receipts |
 | `prompts/` | Voice and brain behavior |
 | `config/` | Personal Vapi settings and tool definitions |
 | `bin/` | Managed-session commands and native keeper |
@@ -264,6 +295,9 @@ The saved `REVISION` and authenticated `/status` response identify the running c
 The first integration exercise is one real inquiry, with its call/chat transcript and confirmation attached to the original job record.
 
 ## References
+
+- [Bland voice cloning](https://docs.bland.ai/api-v1/post/clone)
+- [Bland voice-slot limits](https://docs.bland.ai/speech/limits)
 
 - [Vapi conversation timing](https://docs.vapi.ai/customization/voice-pipeline-configuration)
 - [Vapi live call control](https://docs.vapi.ai/calls/call-features)

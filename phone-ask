@@ -10,6 +10,8 @@ import json, os, sys, time, urllib.request
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from assistant_records import receipt
+from voice_catalog import resolve_call_voice
+from speech_text import SPEECH_GUIDANCE, pronunciation_guide
 
 BASE = "https://api.bland.ai/v1"
 HOME = "/root/.bland"
@@ -43,6 +45,9 @@ Rules:
 - When every question is answered, say "That's all, thank you so much, have a good one" and end the call.
 - Keep every sentence short. Do not chit-chat.
 
+Speech:
+{SPEECH_GUIDANCE}
+
 Questions:
 {qs}"""
     return {
@@ -50,7 +55,7 @@ Questions:
         "task": task,
         "first_sentence": "Hi, this is George. I have a couple of quick questions.",
         "wait_for_greeting": True,
-        "voice": "maya",
+        "voice": resolve_call_voice(),
         "record": False,
         "max_duration": 5,
         "voicemail": {"action": "hangup"},

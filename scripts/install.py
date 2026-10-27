@@ -73,7 +73,7 @@ def main():
             for source in (REPO / folder).rglob('*'):
                 if source.is_file() and '__pycache__' not in source.parts:
                     copy(source, SHARE / source.relative_to(REPO))
-        for name in ['phone-ask', 'phone-do', 'assistant', 'support-chat', 'assistant_records.py', 'README.md']:
+        for name in ['phone-ask', 'phone-do', 'assistant', 'support-chat', 'assistant_records.py', 'voice_catalog.py', 'speech_text.py', 'README.md']:
             copy(REPO / name, SHARE / name, name in ['phone-ask', 'phone-do', 'assistant', 'support-chat'])
         for source in (REPO / 'voice').iterdir():
             if source.is_file():

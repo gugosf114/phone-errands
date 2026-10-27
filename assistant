@@ -2,10 +2,12 @@
 """Send work to the same personal brain from a terminal or chat; inspect its receipts."""
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from assistant_records import request, read_card, receipt, flush
+from voice_catalog import catalog, resolve_call_voice
 
 
 def main():
@@ -21,6 +23,10 @@ def main():
     jobs = sub.add_parser('jobs', help='List jobs or read one complete record')
     jobs.add_argument('id', nargs='?')
     sub.add_parser('status')
+    voice = sub.add_parser('voice', help='Render a preview of an imported George voice')
+    voice.add_argument('--voice', choices=['george-natural', 'majestic-george'], default='george-natural')
+    voice.add_argument('--text', required=True)
+    voice.add_argument('--out', required=True)
     sub.add_parser('flush', help='Attach receipts saved while the bridge was unavailable')
     rec = sub.add_parser('receipt', help='Attach proof or an outcome to a job')
     rec.add_argument('job_id')
@@ -31,6 +37,14 @@ def main():
     rec.add_argument('--path')
     rec.add_argument('--confirmation')
     args = parser.parse_args()
+    if args.command == 'voice':
+        root = Path(__file__).resolve().parent
+        if args.voice == 'majestic-george':
+            command = [catalog()['assetDirectory'] + '/venv/bin/python', str(root / 'scripts/render-george.py'), '--text', args.text, '--out', args.out]
+        else:
+            command = [sys.executable, str(root / 'scripts/bland-voice.py'), 'speak', '--voice', resolve_call_voice(args.voice), '--text', args.text, '--out', args.out]
+        subprocess.run(command, check=True)
+        return
     if args.command == 'submit':
         card = read_card(args.card)
         body = {'task': card['goal'], 'card': card, 'channel': args.channel or card.get('channel', 'auto')}

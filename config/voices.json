@@ -1,0 +1,17 @@
+{
+  "defaultCallVoice": "george-natural",
+  "assetDirectory": "/root/.local/share/phone-errands-voices",
+  "voices": {
+    "george-natural": {
+      "name": "George Natural",
+      "blandId": "f964580c-5349-4ca3-a4db-8ca422d540d2",
+      "source": "Original accepted training recordings"
+    },
+    "majestic-george": {
+      "name": "Majestic George",
+      "localModel": "models/en_US-george-medium.onnx",
+      "source": "Imported Piper model",
+      "blandStatus": "Account clone limit reached"
+    }
+  }
+}

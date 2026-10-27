@@ -1,0 +1,1536 @@
+{
+  "sourceRepo": "abrahamyants/wim-calls",
+  "sourceRevision": "0fd29c5",
+  "assets": [
+    {
+      "path": "models/en_US-george-medium.onnx",
+      "bytes": 63516050,
+      "sha256": "646064dbf66594e315cda7e436849ab9637b9481c5fe413cba77be5f52bf28c7"
+    },
+    {
+      "path": "models/en_US-george-medium.onnx.json",
+      "bytes": 5036,
+      "sha256": "7f148fbd2f9ec7af2bb464af3229fed50acb51038d2769b0b802e98826a5b4ae"
+    },
+    {
+      "path": "recordings/myvoice-100_2026-09-14T22-38-47-827Z.raw",
+      "bytes": 102144,
+      "sha256": "27eae03f18b6f32fb0ccf389d95327220f23501b8e9434e287b051a7aaa96fd6"
+    },
+    {
+      "path": "recordings/myvoice-100_2026-09-14T22-38-47-827Z.txt",
+      "bytes": 122,
+      "sha256": "49cf4c2ffdafda1aa0ec74be0e292e8de75022c8b8bbed54d30caff88d0283b0"
+    },
+    {
+      "path": "recordings/myvoice-101_2026-09-14T22-38-51-253Z.raw",
+      "bytes": 111872,
+      "sha256": "c5f44b6dadedc7b60d23b1b7b66d4019fde76c1cca833c51dbede9d92f5b0537"
+    },
+    {
+      "path": "recordings/myvoice-101_2026-09-14T22-38-51-253Z.txt",
+      "bytes": 101,
+      "sha256": "7aedde0bd9bceee166af8d4f8b624cb0205f437a0e08523ca6d9c01eae50a71d"
+    },
+    {
+      "path": "recordings/myvoice-102_2026-09-14T22-38-55-157Z.raw",
+      "bytes": 160512,
+      "sha256": "00b06a21b908eeba3f7c15da1b26496619a6104eff16a0f8b6db65b10c9bf37b"
+    },
+    {
+      "path": "recordings/myvoice-102_2026-09-14T22-38-55-157Z.txt",
+      "bytes": 141,
+      "sha256": "e6226238cae1410323252f1ae950bbd4828ab89e19e370406f4e18cb40350367"
+    },
+    {
+      "path": "recordings/myvoice-103_2026-09-14T22-38-59-892Z.raw",
+      "bytes": 145920,
+      "sha256": "2a48fd537b8221506934eeb7b972f0d96104a522b01dacc5e8327b759e3acbec"
+    },
+    {
+      "path": "recordings/myvoice-103_2026-09-14T22-38-59-892Z.txt",
+      "bytes": 158,
+      "sha256": "4bb8c15b3eb80cd730ac1af9e77aadd374f5eae8d4f4e38391d2f492c03305ae"
+    },
+    {
+      "path": "recordings/myvoice-104_2026-09-14T22-39-05-149Z.raw",
+      "bytes": 194560,
+      "sha256": "185b816cd9e8ebde8d724092e51acec97952e1e83224d087c00bc601cc735f2b"
+    },
+    {
+      "path": "recordings/myvoice-104_2026-09-14T22-39-05-149Z.txt",
+      "bytes": 170,
+      "sha256": "6d7bc63f94fd21bd969546a5ab44115b871e05c99e289487dd2cd707157371fd"
+    },
+    {
+      "path": "recordings/myvoice-105_2026-09-14T22-39-10-652Z.raw",
+      "bytes": 170240,
+      "sha256": "2996f4a3522bba36d21b9873bebd39a20d56b565fae9187b42787ce942e77f92"
+    },
+    {
+      "path": "recordings/myvoice-105_2026-09-14T22-39-10-652Z.txt",
+      "bytes": 161,
+      "sha256": "275aacff4a3b0c0ab40d2f1b8a9e5a57c14fc51382f2d42011bf5fda4b66b7f9"
+    },
+    {
+      "path": "recordings/myvoice-106_2026-09-14T22-39-15-605Z.raw",
+      "bytes": 145920,
+      "sha256": "64062f1b222e8d4fc9d693b6dd0f55276f87f6de8942b47620390200788aa39b"
+    },
+    {
+      "path": "recordings/myvoice-106_2026-09-14T22-39-15-605Z.txt",
+      "bytes": 159,
+      "sha256": "895c907e2886f6993f7dabb09b6c41ca6c7183230bbc9be56ef012ef6070db1f"
+    },
+    {
+      "path": "recordings/myvoice-107_2026-09-14T22-39-20-215Z.raw",
+      "bytes": 165376,
+      "sha256": "90adb6ff6e3f4c765f64779c9510e2446de5ebcba25f4e1e9ae72700a780f1ed"
+    },
+    {
+      "path": "recordings/myvoice-107_2026-09-14T22-39-20-215Z.txt",
+      "bytes": 170,
+      "sha256": "15a390cbb0828132ff95ed406003c8de0b8a49389ae29da33a085d475251ea7a"
+    },
+    {
+      "path": "recordings/myvoice-108_2026-09-14T22-39-25-071Z.raw",
+      "bytes": 145920,
+      "sha256": "25ae5a4abaa9dcce748a8cf01f1d42d3496aa58f2842ea74e8803a2db2fb30fe"
+    },
+    {
+      "path": "recordings/myvoice-108_2026-09-14T22-39-25-071Z.txt",
+      "bytes": 146,
+      "sha256": "105a31b43aeea7694c80c6750635e002190b04645c1c6cfe75cef04be1bdf77e"
+    },
+    {
+      "path": "recordings/myvoice-109_2026-09-14T22-39-42-960Z.raw",
+      "bytes": 194560,
+      "sha256": "ade641e2e3cae60f8f0bca1041ec5a144477ed00a19595effa86665780217d38"
+    },
+    {
+      "path": "recordings/myvoice-109_2026-09-14T22-39-42-960Z.txt",
+      "bytes": 173,
+      "sha256": "dfd3cc5a53f8285683d995cc2894cc5200a6e5d9f0398988959678906ad72457"
+    },
+    {
+      "path": "recordings/myvoice-10_2026-09-14T22-00-41-709Z.raw",
+      "bytes": 155648,
+      "sha256": "55a2c2913bf7810b4302b0a8554254c0c46d934fd0d49d064f45a7d71cc5ef16"
+    },
+    {
+      "path": "recordings/myvoice-10_2026-09-14T22-00-41-709Z.txt",
+      "bytes": 154,
+      "sha256": "ed7c9b989cd14ff82eab455a14537b93442ffce251412726b56db097f7122744"
+    },
+    {
+      "path": "recordings/myvoice-110_2026-09-14T22-39-48-461Z.raw",
+      "bytes": 165376,
+      "sha256": "445aab632abe317a88d197a6cffb27742a078c46c0d1160791c8356d08508962"
+    },
+    {
+      "path": "recordings/myvoice-110_2026-09-14T22-39-48-461Z.txt",
+      "bytes": 149,
+      "sha256": "c64051a3eabae69fb426e3cbdf0bfbf6c771bd1aabea5e3ae691992724a70829"
+    },
+    {
+      "path": "recordings/myvoice-111_2026-09-14T22-39-53-168Z.raw",
+      "bytes": 131328,
+      "sha256": "32b8436ef66d3902735daad00a3558f873aa1f854604c85a5185612fe12d7e44"
+    },
+    {
+      "path": "recordings/myvoice-111_2026-09-14T22-39-53-168Z.txt",
+      "bytes": 146,
+      "sha256": "b031183c90f03b7af6af8aba8784c858347bdfc7aed8907fd1fd7ca2eb59e229"
+    },
+    {
+      "path": "recordings/myvoice-112_2026-09-14T22-39-57-247Z.raw",
+      "bytes": 141056,
+      "sha256": "d473d79ff6acd8e18b60cf1425f63e7faedcdbe6bfff5ee2cf6a8137f9c98069"
+    },
+    {
+      "path": "recordings/myvoice-112_2026-09-14T22-39-57-247Z.txt",
+      "bytes": 146,
+      "sha256": "dde7c88ed2e69a6d7703ac38604841726663510d3fd9b88d0dc6f4a83a5c35c8"
+    },
+    {
+      "path": "recordings/myvoice-113_2026-09-14T22-40-01-526Z.raw",
+      "bytes": 155648,
+      "sha256": "5781621f3cab82045717ebbec112a4443899a992e6e4a2dd0dd3f243c542b170"
+    },
+    {
+      "path": "recordings/myvoice-113_2026-09-14T22-40-01-526Z.txt",
+      "bytes": 152,
+      "sha256": "df7f10c04282d836d0e3d0a894c85c830dc20d49749e7fba7f812e44a9115edb"
+    },
+    {
+      "path": "recordings/myvoice-114_2026-09-14T22-40-06-039Z.raw",
+      "bytes": 165376,
+      "sha256": "38a021f84b04b85828ee4cb8dd16d3a40ed9351daeca6ada395c29121d2ccc56"
+    },
+    {
+      "path": "recordings/myvoice-114_2026-09-14T22-40-06-039Z.txt",
+      "bytes": 164,
+      "sha256": "5e264c96b6b248a31c861d93f40a58763d122271a750b928fd5b600e7f4fccc0"
+    },
+    {
+      "path": "recordings/myvoice-115_2026-09-14T22-40-10-924Z.raw",
+      "bytes": 160512,
+      "sha256": "9be8f0bea71b88fb4e64b1e616587a0ac971e7de471be94611e1b9d14bbe5ea8"
+    },
+    {
+      "path": "recordings/myvoice-115_2026-09-14T22-40-10-924Z.txt",
+      "bytes": 173,
+      "sha256": "29f2583877dbc103cd01ad6eff25ec3e82880e0b25de5c32fac7b18e39beaf27"
+    },
+    {
+      "path": "recordings/myvoice-116_2026-09-14T22-40-18-690Z.raw",
+      "bytes": 126464,
+      "sha256": "d03b8dcfe32e8c1b0d77f0f226d3b5414073f45a65512a083ac999ac8192ccb4"
+    },
+    {
+      "path": "recordings/myvoice-116_2026-09-14T22-40-18-690Z.txt",
+      "bytes": 148,
+      "sha256": "19bcc1e55f6a0d74999e80ff5f340a4a11abf9f01190c935aab0dc7016b312b7"
+    },
+    {
+      "path": "recordings/myvoice-117_2026-09-14T22-40-22-588Z.raw",
+      "bytes": 155648,
+      "sha256": "9a6b08773557e5c1a08d4bdc72d87ec0166776987e2554400aa0dcf37d96786d"
+    },
+    {
+      "path": "recordings/myvoice-117_2026-09-14T22-40-22-588Z.txt",
+      "bytes": 136,
+      "sha256": "9eb628ad028cc4fd4e06cf6e9b749320d019a4eac10a555fa7819e24c0346ef1"
+    },
+    {
+      "path": "recordings/myvoice-118_2026-09-14T22-42-42-634Z.raw",
+      "bytes": 145920,
+      "sha256": "3f5ac951981553ed98c837f6b2c0ab8e19a2c6b8779e09db9bb460238e1ea442"
+    },
+    {
+      "path": "recordings/myvoice-118_2026-09-14T22-42-42-634Z.txt",
+      "bytes": 143,
+      "sha256": "642f034a559477b1bf9c0b017f9b6a25af28858d98c5a8b9e0084b1bb06bae11"
+    },
+    {
+      "path": "recordings/myvoice-119_2026-09-14T22-42-52-634Z.raw",
+      "bytes": 165376,
+      "sha256": "70932181d722d47adbe66ce590b1b543ae801179b77d7373656baa58ca1dc307"
+    },
+    {
+      "path": "recordings/myvoice-119_2026-09-14T22-42-52-634Z.txt",
+      "bytes": 155,
+      "sha256": "56b02962ebb2332bad7c1006547d727e748e00983b09fba25695d335a98e3f41"
+    },
+    {
+      "path": "recordings/myvoice-11_2026-09-14T22-00-46-426Z.raw",
+      "bytes": 150784,
+      "sha256": "95f17884031c72f4d17cede8cec2376ea9b0b14ea8ad5bfac41d68fefd799823"
+    },
+    {
+      "path": "recordings/myvoice-11_2026-09-14T22-00-46-426Z.txt",
+      "bytes": 173,
+      "sha256": "3d88ce69788257048eea75342777cb30f33e300e5a11097b02aa5b7bacb31151"
+    },
+    {
+      "path": "recordings/myvoice-120_2026-09-14T22-42-57-533Z.raw",
+      "bytes": 175104,
+      "sha256": "2e25cf2ac64c837606a7f80045070e8e075196a9737f822f223b6acc24858786"
+    },
+    {
+      "path": "recordings/myvoice-120_2026-09-14T22-42-57-533Z.txt",
+      "bytes": 152,
+      "sha256": "5130c52eda35f11c460cf4dee2b2ee3a8e573346a7f9057a1e5b60094cf819ab"
+    },
+    {
+      "path": "recordings/myvoice-121_2026-09-14T22-43-06-710Z.raw",
+      "bytes": 107008,
+      "sha256": "58e91cfe7218affcb05078b7c60dcf013413ac544a05cf83ce055ba38339eb83"
+    },
+    {
+      "path": "recordings/myvoice-121_2026-09-14T22-43-06-710Z.txt",
+      "bytes": 146,
+      "sha256": "03beb778676f6149cd722d3a4d8e22f733ae3991de53450590cf6e463ce13236"
+    },
+    {
+      "path": "recordings/myvoice-122_2026-09-14T22-49-34-731Z.raw",
+      "bytes": 102144,
+      "sha256": "5a1286fa2cd8ff3af84e09923ec8d395a7397b453777c1ef803dd3e985d9d846"
+    },
+    {
+      "path": "recordings/myvoice-122_2026-09-14T22-49-34-731Z.txt",
+      "bytes": 137,
+      "sha256": "334727e350b07a7e19894d4938484c14e1bf19842f7fa64f5bfda9355bbd1447"
+    },
+    {
+      "path": "recordings/myvoice-123_2026-09-14T22-49-38-443Z.raw",
+      "bytes": 121600,
+      "sha256": "c444a85b50fe0638fb5c4cd6b0644a1d6b7867d1932ff061350ef2ad9efbfb2e"
+    },
+    {
+      "path": "recordings/myvoice-123_2026-09-14T22-49-38-443Z.txt",
+      "bytes": 164,
+      "sha256": "fc1cfa7994c7eb811578ec4ed3323e5655aa76727c8a848c939fb0579f13557b"
+    },
+    {
+      "path": "recordings/myvoice-124_2026-09-14T22-49-42-450Z.raw",
+      "bytes": 131328,
+      "sha256": "2c3d7da8633b06705aaf732e085b82482b26e210cef3c316d015243530d1ecbf"
+    },
+    {
+      "path": "recordings/myvoice-124_2026-09-14T22-49-42-450Z.txt",
+      "bytes": 149,
+      "sha256": "ccdcaea2a19379bd6dfa3a0e0e8f509abfb152533912df83f44d683edd99115a"
+    },
+    {
+      "path": "recordings/myvoice-125_2026-09-14T22-49-46-492Z.raw",
+      "bytes": 160512,
+      "sha256": "5dd19fe27b3ae0d6818a81edad504d7e0a8aceced88cfbe2a4eb9f923d1196e9"
+    },
+    {
+      "path": "recordings/myvoice-125_2026-09-14T22-49-46-492Z.txt",
+      "bytes": 155,
+      "sha256": "63d9ac0726c50955d590050654cbb255a7bd160e28191c4e6e576dae375b18b9"
+    },
+    {
+      "path": "recordings/myvoice-126_2026-09-14T22-49-50-939Z.raw",
+      "bytes": 131328,
+      "sha256": "4080b3184e9ae975c73ed7614833546e10b17a18d6497f4ab7bbbcd65205afca"
+    },
+    {
+      "path": "recordings/myvoice-126_2026-09-14T22-49-50-939Z.txt",
+      "bytes": 150,
+      "sha256": "7c99e79b69f0e466876ceefeefb2453f158766094b28cc9b6914238eb4a441f7"
+    },
+    {
+      "path": "recordings/myvoice-127_2026-09-14T22-49-55-468Z.raw",
+      "bytes": 131328,
+      "sha256": "2193219e689a00613432c76a4eaaa7b335bad0b9c1ceff7791e1e61bca77b801"
+    },
+    {
+      "path": "recordings/myvoice-127_2026-09-14T22-49-55-468Z.txt",
+      "bytes": 131,
+      "sha256": "fe95f656f654495726aa95b193e015278e694cbf3160d862caf226ac87e22064"
+    },
+    {
+      "path": "recordings/myvoice-128_2026-09-14T22-50-02-223Z.raw",
+      "bytes": 131328,
+      "sha256": "3d4ebcf58e2c8ec63b10dd396c0289679f022925b3933ad580f6a8576c0a4ef0"
+    },
+    {
+      "path": "recordings/myvoice-128_2026-09-14T22-50-02-223Z.txt",
+      "bytes": 158,
+      "sha256": "b1dbe0c57aa027c27042d89042abf016faae408e9254eb8ef366f1bcd0471c21"
+    },
+    {
+      "path": "recordings/myvoice-129_2026-09-14T22-50-06-657Z.raw",
+      "bytes": 150784,
+      "sha256": "0ef3d91639b0c6daca65275ebbb881e345f68e8252132c5f4957bf62da6fa9e6"
+    },
+    {
+      "path": "recordings/myvoice-129_2026-09-14T22-50-06-657Z.txt",
+      "bytes": 134,
+      "sha256": "30d80cc86287d62331aa3817f69179a9bac1f17393469652ba2e1187220a21c9"
+    },
+    {
+      "path": "recordings/myvoice-12_2026-09-14T22-00-51-925Z.raw",
+      "bytes": 150784,
+      "sha256": "1f47ef4702d103b2528dd2c18da85414ca1ec3b4e574b8d740b5d9a123a9aa06"
+    },
+    {
+      "path": "recordings/myvoice-12_2026-09-14T22-00-51-925Z.txt",
+      "bytes": 149,
+      "sha256": "37447b5b20b5c61cda6c23d4888119da5b53b1ecbc42896f29e5e0c974dce622"
+    },
+    {
+      "path": "recordings/myvoice-130_2026-09-14T22-50-11-099Z.raw",
+      "bytes": 175104,
+      "sha256": "c6a44da6859cc700e32f552bd885560f8e158b146efbc6ba3dfd0efd34a72b4f"
+    },
+    {
+      "path": "recordings/myvoice-130_2026-09-14T22-50-11-099Z.txt",
+      "bytes": 170,
+      "sha256": "e3c5a1a6abc3695e2a2ad25530abec1f06c33deb31b16d6075bc2b90fba0f6f1"
+    },
+    {
+      "path": "recordings/myvoice-131_2026-09-14T22-50-16-165Z.raw",
+      "bytes": 141056,
+      "sha256": "f027d1d1db05e67aab6b87b6df752b949ab9c0cb53d8db9c776b8e428d935a0c"
+    },
+    {
+      "path": "recordings/myvoice-131_2026-09-14T22-50-16-165Z.txt",
+      "bytes": 143,
+      "sha256": "f27b4123430d9a53628a2f4146c680eac0dbfc0ef660dd2aa5313a9d798feb38"
+    },
+    {
+      "path": "recordings/myvoice-132_2026-09-14T22-50-25-071Z.raw",
+      "bytes": 184832,
+      "sha256": "f18b15a7e6144aecc47ad36688bac4c04e2264f0bc69ef17fff05481222262cc"
+    },
+    {
+      "path": "recordings/myvoice-132_2026-09-14T22-50-25-071Z.txt",
+      "bytes": 131,
+      "sha256": "8c206931703bb53eaaf20ca0f6f1f61b31a303a58c19bb52c9a02ca41dbf78d4"
+    },
+    {
+      "path": "recordings/myvoice-133_2026-09-14T22-50-32-829Z.raw",
+      "bytes": 170240,
+      "sha256": "4cae989d0f6cf67e88690bfc54b9c1106dedb4d782260a66d631f8d95ed7fc96"
+    },
+    {
+      "path": "recordings/myvoice-133_2026-09-14T22-50-32-829Z.txt",
+      "bytes": 161,
+      "sha256": "fff6898812eb6b117b2f09e36dd91cfb301d2a3149f579b0a4e26bf94f208861"
+    },
+    {
+      "path": "recordings/myvoice-134_2026-09-14T22-50-37-770Z.raw",
+      "bytes": 141056,
+      "sha256": "3929d7fcf71d0aee4ca22e3138b5ad83643038cdf4ad8fd5ebb326b544d59bf7"
+    },
+    {
+      "path": "recordings/myvoice-134_2026-09-14T22-50-37-770Z.txt",
+      "bytes": 146,
+      "sha256": "36f5d3eb159c4874b381204124ff6d4a36afb9cca6343c94ea751a7bea368661"
+    },
+    {
+      "path": "recordings/myvoice-135_2026-09-14T22-50-42-101Z.raw",
+      "bytes": 145920,
+      "sha256": "99345530253003d3f5aa7851e5f04a6a0d5e633aed7dbd325a70da8e19826676"
+    },
+    {
+      "path": "recordings/myvoice-135_2026-09-14T22-50-42-101Z.txt",
+      "bytes": 137,
+      "sha256": "22f68234642d4905f4ea534f5875729fb8c44a47a436d581e40b1ccae4c3c959"
+    },
+    {
+      "path": "recordings/myvoice-136_2026-09-14T22-50-46-559Z.raw",
+      "bytes": 165376,
+      "sha256": "09668ddcf4d89a6fe45160b8f165fc83f74dd933b9826c98897399cae70aa210"
+    },
+    {
+      "path": "recordings/myvoice-136_2026-09-14T22-50-46-559Z.txt",
+      "bytes": 152,
+      "sha256": "e2e34b4da604351b2fdb24861f8a2935b9ff9ce7a067c382e0d4af1c93a0ed0d"
+    },
+    {
+      "path": "recordings/myvoice-137_2026-09-14T22-50-52-332Z.raw",
+      "bytes": 170240,
+      "sha256": "07f9dc70b7118ea26825e8ec0f1ced31aa0a3b3829345c5a48b31b05fef94783"
+    },
+    {
+      "path": "recordings/myvoice-137_2026-09-14T22-50-52-332Z.txt",
+      "bytes": 92,
+      "sha256": "b5419d3a7ee53381a40660265681671c885d9aa174d67f92507825949bc4ed51"
+    },
+    {
+      "path": "recordings/myvoice-138_2026-09-14T22-50-57-486Z.raw",
+      "bytes": 155648,
+      "sha256": "b6ae37375e19a50bdbb988d1bf4d92e30568a9eb0bcff6277276c1e850866ccb"
+    },
+    {
+      "path": "recordings/myvoice-138_2026-09-14T22-50-57-486Z.txt",
+      "bytes": 85,
+      "sha256": "1f6a76e3b97d2db4e04e034acfd85dba6cabf7c89c124a1146339af71331d6c1"
+    },
+    {
+      "path": "recordings/myvoice-139_2026-09-14T22-51-02-383Z.raw",
+      "bytes": 179968,
+      "sha256": "e66ebd25f41c85383a6b709be00eb0a2a77d159cc03679cc595b60f56aa7df05"
+    },
+    {
+      "path": "recordings/myvoice-139_2026-09-14T22-51-02-383Z.txt",
+      "bytes": 100,
+      "sha256": "428b8cf13737c75d428cc006a9acf3c30c844a99fc91acd329877b61793bb71c"
+    },
+    {
+      "path": "recordings/myvoice-13_2026-09-14T22-00-57-671Z.raw",
+      "bytes": 175104,
+      "sha256": "824ec9e7409d62cb6968c410857f9b0ffdc9fda062a95b5dad5dac304669ee04"
+    },
+    {
+      "path": "recordings/myvoice-13_2026-09-14T22-00-57-671Z.txt",
+      "bytes": 140,
+      "sha256": "3640e2339bf3e4e843f6355d48259e6230b49187899d4351632b15bed53bc393"
+    },
+    {
+      "path": "recordings/myvoice-140_2026-09-14T22-51-08-200Z.raw",
+      "bytes": 170240,
+      "sha256": "79517d22e99f39f18b8048861c677f69eec56e330cc2d0159b705d4832dc416c"
+    },
+    {
+      "path": "recordings/myvoice-140_2026-09-14T22-51-08-200Z.txt",
+      "bytes": 97,
+      "sha256": "5bd66b274e2f853d99502e1f4574eeae5a9837edb0682328e72541b3221a06c2"
+    },
+    {
+      "path": "recordings/myvoice-141_2026-09-14T22-51-13-363Z.raw",
+      "bytes": 184832,
+      "sha256": "524db269c433676cde1993570248b8811bcea384eb5a89498209eae38b2cdd84"
+    },
+    {
+      "path": "recordings/myvoice-141_2026-09-14T22-51-13-363Z.txt",
+      "bytes": 166,
+      "sha256": "d8c158dcde2471889fc625da0d4245daa19b646293416059890e8fe13d7bc84c"
+    },
+    {
+      "path": "recordings/myvoice-142_2026-09-14T22-51-20-078Z.raw",
+      "bytes": 194560,
+      "sha256": "6b02010c4957c3ca6b5c62b7b2fb20d2de6f038c820e80d7d8b300bc04ab91f4"
+    },
+    {
+      "path": "recordings/myvoice-142_2026-09-14T22-51-20-078Z.txt",
+      "bytes": 142,
+      "sha256": "9e07b59ecb5d628fa5c38f09e38f001addb4433ebd29c6dc83d61a05ddf1ec40"
+    },
+    {
+      "path": "recordings/myvoice-143_2026-09-14T22-51-26-238Z.raw",
+      "bytes": 160512,
+      "sha256": "2a48de1a3b3753e4676b72073ab0b42b5d20ddc7dc5166fda9cb8022913beb6c"
+    },
+    {
+      "path": "recordings/myvoice-143_2026-09-14T22-51-26-238Z.txt",
+      "bytes": 148,
+      "sha256": "697513e2f597b35f4055cb862aee648ee54fe4579ae55d8a7cf8ca5376526d1c"
+    },
+    {
+      "path": "recordings/myvoice-144_2026-09-14T22-51-31-173Z.raw",
+      "bytes": 194560,
+      "sha256": "3e35bbf0e4e5648363ce3d1935f1c7c6061aee7c7fa06b2e57bead1d8b0c088f"
+    },
+    {
+      "path": "recordings/myvoice-144_2026-09-14T22-51-31-173Z.txt",
+      "bytes": 161,
+      "sha256": "3c4ed4dd81ead5c03031eec23579f9916e4edba62bc18c2ce5d2cec87548d469"
+    },
+    {
+      "path": "recordings/myvoice-145_2026-09-14T22-51-37-092Z.raw",
+      "bytes": 126464,
+      "sha256": "6734e4c37b41d42ee5f26e72108c9352917f9c987678c1874e04280261a67cdb"
+    },
+    {
+      "path": "recordings/myvoice-145_2026-09-14T22-51-37-092Z.txt",
+      "bytes": 82,
+      "sha256": "02acda74ccf38c59eecc1b20cd430605e66ecc4f8bfea94750edd6c55dfcd116"
+    },
+    {
+      "path": "recordings/myvoice-146_2026-09-14T22-51-42-352Z.raw",
+      "bytes": 150784,
+      "sha256": "beef225941d087588abaacee59ad924e310c9225c6f90cb62d9b1996ed6f30a4"
+    },
+    {
+      "path": "recordings/myvoice-146_2026-09-14T22-51-42-352Z.txt",
+      "bytes": 70,
+      "sha256": "db3c1bbe3efd5cb1c2d3459255f4156b724b7a575dfb0cc55712f5b75d881cec"
+    },
+    {
+      "path": "recordings/myvoice-147_2026-09-14T22-51-47-248Z.raw",
+      "bytes": 145920,
+      "sha256": "afb9fe9acaff4cd765420fbea23adb897983038d911e01d4e407c82eb16eecaa"
+    },
+    {
+      "path": "recordings/myvoice-147_2026-09-14T22-51-47-248Z.txt",
+      "bytes": 83,
+      "sha256": "1c4e499144bb215db0b53d7943732e621fb26850c8e1a2eef2304fe7b35494bc"
+    },
+    {
+      "path": "recordings/myvoice-148_2026-09-14T22-51-52-221Z.raw",
+      "bytes": 233472,
+      "sha256": "73fde6894b341f4384131c450b760062f0a6384fd14113981bda3b6b60db8762"
+    },
+    {
+      "path": "recordings/myvoice-148_2026-09-14T22-51-52-221Z.txt",
+      "bytes": 85,
+      "sha256": "0cf5bcfa8842d38c7300ac5c7ae979bcbc2adc0e76498f227ab43b28605726b8"
+    },
+    {
+      "path": "recordings/myvoice-149_2026-09-14T22-51-59-382Z.raw",
+      "bytes": 214016,
+      "sha256": "42619752438d544d70d05d6841390202e2eb69c5aad5a9ab71464ef916dc5c03"
+    },
+    {
+      "path": "recordings/myvoice-149_2026-09-14T22-51-59-382Z.txt",
+      "bytes": 133,
+      "sha256": "8d3bd93b5fc7fef265d36e4342607f528c1fe395de7f59d5e76acc4da295e79e"
+    },
+    {
+      "path": "recordings/myvoice-14_2026-09-14T22-01-02-786Z.raw",
+      "bytes": 184832,
+      "sha256": "5ac36d1bf079d848e72a98cb9adcc8b028e79cdbd94b0334f74f3340a44be8e2"
+    },
+    {
+      "path": "recordings/myvoice-14_2026-09-14T22-01-02-786Z.txt",
+      "bytes": 182,
+      "sha256": "599141ac4adf26fc0e3687c7604762c2fce2062087b206f234dbc3945adaccd8"
+    },
+    {
+      "path": "recordings/myvoice-150_2026-09-14T22-52-06-654Z.raw",
+      "bytes": 199424,
+      "sha256": "a490c68c0799741ec995ceb7eaa2d7b77e8ff53f1f6aeacad9ee9d2b9fad4da5"
+    },
+    {
+      "path": "recordings/myvoice-150_2026-09-14T22-52-06-654Z.txt",
+      "bytes": 148,
+      "sha256": "fe9f114e6522dfd46aded413b0022fb54b39ec57352b5e0b2598bd0116703cd5"
+    },
+    {
+      "path": "recordings/myvoice-15_2026-09-14T22-01-08-205Z.raw",
+      "bytes": 131328,
+      "sha256": "63407069d99dcc517b78fbc208f2f213836e76b84c49985a2d2e35646235dce3"
+    },
+    {
+      "path": "recordings/myvoice-15_2026-09-14T22-01-08-205Z.txt",
+      "bytes": 110,
+      "sha256": "8fa4890d89a78ec5c900dda736a29654772925b04622a8faecca07c73b5177bc"
+    },
+    {
+      "path": "recordings/myvoice-16_2026-09-14T22-01-12-712Z.raw",
+      "bytes": 136192,
+      "sha256": "b0b95c5f3120f767b9f9b8388a5e9d659cea83a038628488394983652edcf879"
+    },
+    {
+      "path": "recordings/myvoice-16_2026-09-14T22-01-12-712Z.txt",
+      "bytes": 133,
+      "sha256": "72e9e951e020bf572b35d818edafb22a4b5f02c54ffeaaa0da6940cb97924770"
+    },
+    {
+      "path": "recordings/myvoice-17_2026-09-14T22-01-18-637Z.raw",
+      "bytes": 160512,
+      "sha256": "b00c6eef1dc7aa79fbc8dec28787f293db0ef08400f1a2ca95dbb2adea138a51"
+    },
+    {
+      "path": "recordings/myvoice-17_2026-09-14T22-01-18-637Z.txt",
+      "bytes": 140,
+      "sha256": "6e97529c0e774eb77f908bd0d6e15849c99356a911e4c7da901aba176a036de2"
+    },
+    {
+      "path": "recordings/myvoice-18_2026-09-14T22-01-23-588Z.raw",
+      "bytes": 131328,
+      "sha256": "04f05f6be8a76166196e63c08f76dde472a6ec2aa9ab17d2b95793e8084c617b"
+    },
+    {
+      "path": "recordings/myvoice-18_2026-09-14T22-01-23-588Z.txt",
+      "bytes": 113,
+      "sha256": "592676cd6fe453e59a47b09beb73d184ca331503f5f1082e93812ffb7998d263"
+    },
+    {
+      "path": "recordings/myvoice-19_2026-09-14T22-01-48-777Z.raw",
+      "bytes": 214016,
+      "sha256": "474082da93b506bdab1bec2110323f0af9adc9ca55cbf328840a0c16d133ba23"
+    },
+    {
+      "path": "recordings/myvoice-19_2026-09-14T22-01-48-777Z.txt",
+      "bytes": 119,
+      "sha256": "09f3d6b3c89a14dba825fc0667dbdddf8fba259fffc24707dc64199f171be940"
+    },
+    {
+      "path": "recordings/myvoice-1_2026-09-14T21-33-40-679Z.raw",
+      "bytes": 248064,
+      "sha256": "173115c7f3571f9137719ccd371827d2bde202d7f282a6bde5374aa7cfb35095"
+    },
+    {
+      "path": "recordings/myvoice-1_2026-09-14T21-33-40-679Z.txt",
+      "bytes": 160,
+      "sha256": "006183b93772ed5a8d20c0d19f974b1f254929e4f49e7dfa5ffe094109a4dd92"
+    },
+    {
+      "path": "recordings/myvoice-20_2026-09-14T22-02-10-796Z.raw",
+      "bytes": 335616,
+      "sha256": "e91b87fad6bab96dc55fc1ac380696804329eb4c6cd0e6d1b87f485262d6cdfb"
+    },
+    {
+      "path": "recordings/myvoice-20_2026-09-14T22-02-10-796Z.txt",
+      "bytes": 157,
+      "sha256": "3f8f8f34970abdd6133d554a5a60ba2599705bbfc812e3d04991cee9330968b2"
+    },
+    {
+      "path": "recordings/myvoice-21_2026-09-14T22-02-21-751Z.raw",
+      "bytes": 218880,
+      "sha256": "d8342a55ce1930df20c3b2b9adcff9b125247e65305b09f0ec863b364357d435"
+    },
+    {
+      "path": "recordings/myvoice-21_2026-09-14T22-02-21-751Z.txt",
+      "bytes": 167,
+      "sha256": "f6bdf2e7969fc8795706b9f6a6bb9366410543f2b3a51d04d63fdf633bbd3674"
+    },
+    {
+      "path": "recordings/myvoice-22_2026-09-14T22-03-06-369Z.raw",
+      "bytes": 267520,
+      "sha256": "d0ad237c3aa163cb9743fc8997c592d381f8ca6843b734f51eadcf0f8467d15d"
+    },
+    {
+      "path": "recordings/myvoice-22_2026-09-14T22-03-06-369Z.txt",
+      "bytes": 149,
+      "sha256": "fb09324362a0a4c15d3fa39caabb7a86a2a363983c1ffafdb1b243e266939891"
+    },
+    {
+      "path": "recordings/myvoice-23_2026-09-14T22-03-16-272Z.raw",
+      "bytes": 311296,
+      "sha256": "a890df87b7118e44d1fb817a1d5570a1242e6207c253f4ed5cb5fd4c13854c3d"
+    },
+    {
+      "path": "recordings/myvoice-23_2026-09-14T22-03-16-272Z.txt",
+      "bytes": 170,
+      "sha256": "68d5b80fadccef000ac548cc61f31d3a9d435fd341621f43e192e9e22995ac8c"
+    },
+    {
+      "path": "recordings/myvoice-24_2026-09-14T22-03-36-161Z.raw",
+      "bytes": 248064,
+      "sha256": "4751d7a356fdc35f658c500a53daab24b1cc9dfcc277be44e59d930260658881"
+    },
+    {
+      "path": "recordings/myvoice-24_2026-09-14T22-03-36-161Z.txt",
+      "bytes": 167,
+      "sha256": "dc5c43f28bc708cc99f53ba322e641c192b83f41fdcb06b93cdd95026bf3d7b4"
+    },
+    {
+      "path": "recordings/myvoice-25_2026-09-14T22-07-08-099Z.raw",
+      "bytes": 179968,
+      "sha256": "b6dde81151be692b556bc76b894e13e63592b31bffac8e6ea1f2501c269a63b3"
+    },
+    {
+      "path": "recordings/myvoice-25_2026-09-14T22-07-08-099Z.txt",
+      "bytes": 149,
+      "sha256": "d7dff62d34fc110bd08b32a5eac95e8501881ba3f98a77f0e2879d1801724632"
+    },
+    {
+      "path": "recordings/myvoice-26_2026-09-14T22-07-18-164Z.raw",
+      "bytes": 238336,
+      "sha256": "482338fd90e9108d2f065b659cb18693b4d137d3076ad0b9464a2fc564cd4088"
+    },
+    {
+      "path": "recordings/myvoice-26_2026-09-14T22-07-18-164Z.txt",
+      "bytes": 146,
+      "sha256": "f9a03801676d2d0ed7cf152b53d18f7b1bd7c15769bc4bdef9c3c02e71dcf466"
+    },
+    {
+      "path": "recordings/myvoice-27_2026-09-14T22-07-31-928Z.raw",
+      "bytes": 204288,
+      "sha256": "1aebba804407f7df4d818739c0075927b610320baa0654627e456b8599e494b3"
+    },
+    {
+      "path": "recordings/myvoice-27_2026-09-14T22-07-31-928Z.txt",
+      "bytes": 134,
+      "sha256": "7d92b616ed69845e4d3970e98fbd4a954e8428244a3af5d0cf17626380f23646"
+    },
+    {
+      "path": "recordings/myvoice-28_2026-09-14T22-07-38-978Z.raw",
+      "bytes": 189696,
+      "sha256": "af334a7fe1538b6532a51dfc80ab0fb6c6160914758dad18400c4a5ba733bdc8"
+    },
+    {
+      "path": "recordings/myvoice-28_2026-09-14T22-07-38-978Z.txt",
+      "bytes": 146,
+      "sha256": "1bbb8cf07e2936fe0d09c08973a92cdda5ebd5fb0f071b037441d4d0250fc622"
+    },
+    {
+      "path": "recordings/myvoice-29_2026-09-14T22-07-44-761Z.raw",
+      "bytes": 184832,
+      "sha256": "823a880e5f6cec7e3a820c0a1009862b2863fc9d461efff093cf9f0c26d3ad9f"
+    },
+    {
+      "path": "recordings/myvoice-29_2026-09-14T22-07-44-761Z.txt",
+      "bytes": 152,
+      "sha256": "40b595bdc88fa4eac9ca2abfcfcdbb9fa9893166ea6bda006a306a69e6cba715"
+    },
+    {
+      "path": "recordings/myvoice-2_2026-09-14T21-34-12-104Z.raw",
+      "bytes": 141056,
+      "sha256": "50dcc82ddf95faedef6444cb2f894d149c11eea324c3937371bb4853969da15e"
+    },
+    {
+      "path": "recordings/myvoice-2_2026-09-14T21-34-12-104Z.txt",
+      "bytes": 98,
+      "sha256": "d44b8def7bf67c813b19ac8c9c51ec6ece1a5dab756245fc4d6215caf9924638"
+    },
+    {
+      "path": "recordings/myvoice-30_2026-09-14T22-07-50-009Z.raw",
+      "bytes": 160512,
+      "sha256": "3dcdb3cb98131493b44416f474cdeb21a1d99e2f3d953d0aa5a7a93b9c45a80b"
+    },
+    {
+      "path": "recordings/myvoice-30_2026-09-14T22-07-50-009Z.txt",
+      "bytes": 140,
+      "sha256": "ce284368d89682f30c1f1ed9efbddfcb54fed300a291203f706e11746afb2a73"
+    },
+    {
+      "path": "recordings/myvoice-30_2026-09-14T22-13-44-447Z.raw",
+      "bytes": 126464,
+      "sha256": "6a054b0830dca9933b1c4a2efbba8641c607e8177fb6b111405ae8fbf3e05116"
+    },
+    {
+      "path": "recordings/myvoice-30_2026-09-14T22-13-44-447Z.txt",
+      "bytes": 140,
+      "sha256": "ce284368d89682f30c1f1ed9efbddfcb54fed300a291203f706e11746afb2a73"
+    },
+    {
+      "path": "recordings/myvoice-31_2026-09-14T22-13-49-781Z.raw",
+      "bytes": 165376,
+      "sha256": "88b6e2cd6c607c1f1c199a1298bf4da09f6903f4066d08f823b9506b81d6a119"
+    },
+    {
+      "path": "recordings/myvoice-31_2026-09-14T22-13-49-781Z.txt",
+      "bytes": 170,
+      "sha256": "f348aef443620e364e2ae9d2ad12228d49d73bc4e040a37ff6187e26fd990cbc"
+    },
+    {
+      "path": "recordings/myvoice-32_2026-09-14T22-13-54-934Z.raw",
+      "bytes": 194560,
+      "sha256": "49a1d484780a1e6f2e3482995bca8ff94dfc32d3cad62f422df00c15676a5bba"
+    },
+    {
+      "path": "recordings/myvoice-32_2026-09-14T22-13-54-934Z.txt",
+      "bytes": 173,
+      "sha256": "833636d012053ddcf426b1327dce91236e9f69014ed67610a19945670862d569"
+    },
+    {
+      "path": "recordings/myvoice-33_2026-09-14T22-14-00-745Z.raw",
+      "bytes": 145920,
+      "sha256": "c343a0ea2fcc83412a3f5482eef5cc989c965d93eac5dec9796feecfa6b2f845"
+    },
+    {
+      "path": "recordings/myvoice-33_2026-09-14T22-14-00-745Z.txt",
+      "bytes": 151,
+      "sha256": "0cd47ec7fa55da4628d7b9e6125547e1767bfe19db60b63dcad06f301c3c9cab"
+    },
+    {
+      "path": "recordings/myvoice-34_2026-09-14T22-14-05-529Z.raw",
+      "bytes": 141056,
+      "sha256": "7017fe1418a0badee83483c35e4466845bee0a6c40975d9d9eb7c5fe9494e6f9"
+    },
+    {
+      "path": "recordings/myvoice-34_2026-09-14T22-14-05-529Z.txt",
+      "bytes": 133,
+      "sha256": "808dde3374b0e88d32ec85b8a63a57a1d400d28167bf4046d18cee838d180efa"
+    },
+    {
+      "path": "recordings/myvoice-35_2026-09-14T22-14-10-401Z.raw",
+      "bytes": 155648,
+      "sha256": "8b6661561dbd2d9404c31237b24b16da37854cd28db47d16e7aa457010357e6a"
+    },
+    {
+      "path": "recordings/myvoice-35_2026-09-14T22-14-10-401Z.txt",
+      "bytes": 165,
+      "sha256": "028925a49598aad286c418068dafd607b51096ed834ac55b77beb62519131a4e"
+    },
+    {
+      "path": "recordings/myvoice-36_2026-09-14T22-14-15-615Z.raw",
+      "bytes": 155648,
+      "sha256": "a65fe407aa9d24a372bbab7a5f014534e66462cc223ed3dff46c889f7f624677"
+    },
+    {
+      "path": "recordings/myvoice-36_2026-09-14T22-14-15-615Z.txt",
+      "bytes": 173,
+      "sha256": "4a7b9afa383012c396640b993230f24a1f76595fbc25695b1c8711e9725f032b"
+    },
+    {
+      "path": "recordings/myvoice-37_2026-09-14T22-14-20-732Z.raw",
+      "bytes": 160512,
+      "sha256": "b6dbd08606ed057732fa9c2d3e05f10582f81973b85108ae49dcb0bd747528a8"
+    },
+    {
+      "path": "recordings/myvoice-37_2026-09-14T22-14-20-732Z.txt",
+      "bytes": 164,
+      "sha256": "ad1fbbe7a4c86d838e4720d97a86a7a3735cad8ce4ca5d88d30cfb86ca683236"
+    },
+    {
+      "path": "recordings/myvoice-38_2026-09-14T22-14-26-432Z.raw",
+      "bytes": 160512,
+      "sha256": "0def899be474f70e1120da49c13cea1ba5e42027e44e621fdc987e006b3afac5"
+    },
+    {
+      "path": "recordings/myvoice-38_2026-09-14T22-14-26-432Z.txt",
+      "bytes": 143,
+      "sha256": "46a58fcdcec37ed7b77236207830e8ded964b3f1004f56fe85fc2661295773de"
+    },
+    {
+      "path": "recordings/myvoice-39_2026-09-14T22-14-31-553Z.raw",
+      "bytes": 170240,
+      "sha256": "dfc0afd46fd987351527e22cfc972538c63e24bde1d4a05e5b593426d992bf69"
+    },
+    {
+      "path": "recordings/myvoice-39_2026-09-14T22-14-31-553Z.txt",
+      "bytes": 173,
+      "sha256": "f9781c2d2fe3e6d844978a51177e5070dd8af8802290846d83fb745e00d5e718"
+    },
+    {
+      "path": "recordings/myvoice-3_2026-09-14T21-34-21-368Z.raw",
+      "bytes": 170240,
+      "sha256": "405b119a2b7103e94faac017bc7cc4573b925be0e8626b3dbe0d2ff19c370763"
+    },
+    {
+      "path": "recordings/myvoice-3_2026-09-14T21-34-21-368Z.txt",
+      "bytes": 176,
+      "sha256": "ca66ffd260f3ead976c017e9aa213b60c008392ac86ec877dac49ac3b81dea5c"
+    },
+    {
+      "path": "recordings/myvoice-40_2026-09-14T22-14-42-263Z.raw",
+      "bytes": 199424,
+      "sha256": "02b3644734d194ebdfdc043efdb5ecaf8a26fccd4238dca0161848afdedd7010"
+    },
+    {
+      "path": "recordings/myvoice-40_2026-09-14T22-14-42-263Z.txt",
+      "bytes": 171,
+      "sha256": "656269b11784d8da1abeb48fc0b1ce9c9609e8df2b3239614c4df6f96c451979"
+    },
+    {
+      "path": "recordings/myvoice-41_2026-09-14T22-14-53-878Z.raw",
+      "bytes": 165376,
+      "sha256": "8c0b1b53093bc47456c715127b448f7cac233c2f47d6c266be4adad85613c413"
+    },
+    {
+      "path": "recordings/myvoice-41_2026-09-14T22-14-53-878Z.txt",
+      "bytes": 170,
+      "sha256": "90894d731d1ecc70b1d9d653a71d820d86e45c5d1e453ba2afd4d32a291e98d7"
+    },
+    {
+      "path": "recordings/myvoice-42_2026-09-14T22-15-04-967Z.raw",
+      "bytes": 126464,
+      "sha256": "40891ca315bbea1ce3cb57c0ff49382cef38d1b2cac4a679c1f46c07a9146af7"
+    },
+    {
+      "path": "recordings/myvoice-42_2026-09-14T22-15-04-967Z.txt",
+      "bytes": 155,
+      "sha256": "df8fca452d67682cf79d347253d79da4afff4a2b957a61c59e7fb4b56e809beb"
+    },
+    {
+      "path": "recordings/myvoice-43_2026-09-14T22-20-03-710Z.raw",
+      "bytes": 238336,
+      "sha256": "c4f442134d61fb8d7f41474edc09e6088d0e61fd5aeacd0d682827397173d188"
+    },
+    {
+      "path": "recordings/myvoice-43_2026-09-14T22-20-03-710Z.txt",
+      "bytes": 158,
+      "sha256": "d9d9c770ddaf5f1f129ebcb24a7614793be7612bead7bf57e9ae7436f459ef9d"
+    },
+    {
+      "path": "recordings/myvoice-44_2026-09-14T22-24-04-863Z.raw",
+      "bytes": 189696,
+      "sha256": "e4707b752d24d1085e8d6d128081f23cc81a436e67496a36ea946fe82fc69fd2"
+    },
+    {
+      "path": "recordings/myvoice-44_2026-09-14T22-24-04-863Z.txt",
+      "bytes": 145,
+      "sha256": "de6befd89fbc53655ec7f864e277339a457f5e96e546783145a58f3f5d303aa3"
+    },
+    {
+      "path": "recordings/myvoice-45_2026-09-14T22-24-11-096Z.raw",
+      "bytes": 179968,
+      "sha256": "a1b1b99af8ac76153993bb8e73402a53b52baecd0326541f11b964fc6893de99"
+    },
+    {
+      "path": "recordings/myvoice-45_2026-09-14T22-24-11-096Z.txt",
+      "bytes": 163,
+      "sha256": "c7ae1b18d331ab8adad126b08107842bad38ffd091662968bf4ec90760129a72"
+    },
+    {
+      "path": "recordings/myvoice-46_2026-09-14T22-24-16-500Z.raw",
+      "bytes": 155648,
+      "sha256": "7585fb1d8dacaf53921c2e719f0e2103927418bea3f8bcc8527564b9f8aa836d"
+    },
+    {
+      "path": "recordings/myvoice-46_2026-09-14T22-24-16-500Z.txt",
+      "bytes": 143,
+      "sha256": "63d633f533e27c584a6ab352a84beaeafe75979ed83ca0eb4a9a5762bec24667"
+    },
+    {
+      "path": "recordings/myvoice-47_2026-09-14T22-24-21-043Z.raw",
+      "bytes": 131328,
+      "sha256": "5304c02848f3f54eb7b0830566e7d76f2a502317b3fa66fca59fa3ef96ae053b"
+    },
+    {
+      "path": "recordings/myvoice-47_2026-09-14T22-24-21-043Z.txt",
+      "bytes": 119,
+      "sha256": "bf9a951d1550914f9eb2f501740abdffaadee25024d60fe19cca5fded207df49"
+    },
+    {
+      "path": "recordings/myvoice-48_2026-09-14T22-24-25-253Z.raw",
+      "bytes": 170240,
+      "sha256": "7c8c660a3a177afc0a956f843474a3ccdf6b26806e11dbbc9f74bd0813493101"
+    },
+    {
+      "path": "recordings/myvoice-48_2026-09-14T22-24-25-253Z.txt",
+      "bytes": 113,
+      "sha256": "5a379b2f3e5b26c37b4d14659ab26af504ba2dc6ece0849bc3458100d96d8228"
+    },
+    {
+      "path": "recordings/myvoice-49_2026-09-14T22-24-30-295Z.raw",
+      "bytes": 165376,
+      "sha256": "be0cf7da26b8edc4a02ac14798661541c128abacc145d161d832bb52495f8677"
+    },
+    {
+      "path": "recordings/myvoice-49_2026-09-14T22-24-30-295Z.txt",
+      "bytes": 166,
+      "sha256": "6a5d05eb9eb316fe12359985c5d83599043981420a74176e3cf6513c178e16c3"
+    },
+    {
+      "path": "recordings/myvoice-4_2026-09-14T21-55-59-371Z.raw",
+      "bytes": 179968,
+      "sha256": "3fbe5fe2efffef4be655e21895cd362e3acea17ce87c8ba59dcb3e5c7043f25f"
+    },
+    {
+      "path": "recordings/myvoice-4_2026-09-14T21-55-59-371Z.txt",
+      "bytes": 122,
+      "sha256": "16991dba2fd866dbb40dced17353a8e229b2062553e4ce7b700b531269fcb054"
+    },
+    {
+      "path": "recordings/myvoice-50_2026-09-14T22-24-35-205Z.raw",
+      "bytes": 155648,
+      "sha256": "1752e70bb1c83d005122f9f66e136963e0a1b636e4508a8935222655e70fef76"
+    },
+    {
+      "path": "recordings/myvoice-50_2026-09-14T22-24-35-205Z.txt",
+      "bytes": 140,
+      "sha256": "55d669aa6240a97986c71937e7ebb8dc834e34a3839e1fefa283688172d2960b"
+    },
+    {
+      "path": "recordings/myvoice-51_2026-09-14T22-24-40-336Z.raw",
+      "bytes": 131328,
+      "sha256": "fe19314fa8bba783a726ee8b996fd24abb40a21016742004369473671089f760"
+    },
+    {
+      "path": "recordings/myvoice-51_2026-09-14T22-24-40-336Z.txt",
+      "bytes": 141,
+      "sha256": "09212f75ba297a44693fa6f9ae551e939dd671830bc0af29b29ac5b3e15d07b3"
+    },
+    {
+      "path": "recordings/myvoice-52_2026-09-14T22-25-14-676Z.raw",
+      "bytes": 92416,
+      "sha256": "8b76416ab0cc4b588542ae19937c3fdb33ded73435a36001d339d1c6cb1a4937"
+    },
+    {
+      "path": "recordings/myvoice-52_2026-09-14T22-25-14-676Z.txt",
+      "bytes": 109,
+      "sha256": "2112a92fcad63e85b08583c344e947c7ac30f24c44f481c6e5fb2388fdc23996"
+    },
+    {
+      "path": "recordings/myvoice-53_2026-09-14T22-25-19-009Z.raw",
+      "bytes": 150784,
+      "sha256": "64a62093a9d5bde34677e233521f40da47b038827295a2453496b9e9f348ca64"
+    },
+    {
+      "path": "recordings/myvoice-53_2026-09-14T22-25-19-009Z.txt",
+      "bytes": 133,
+      "sha256": "23b902bfc9f5a6b3b50a3da185445895ba24827191d597892a55829d7afd06fe"
+    },
+    {
+      "path": "recordings/myvoice-54_2026-09-14T22-25-23-914Z.raw",
+      "bytes": 131328,
+      "sha256": "ad03cc35c1c7c3a49b987fe66d0e1079fc843fb3b92f1fd71ef0d91b8df265bf"
+    },
+    {
+      "path": "recordings/myvoice-54_2026-09-14T22-25-23-914Z.txt",
+      "bytes": 115,
+      "sha256": "2a658133fb748574221c4fa9ebab0bd7552fd8fa6af80ec5c22b080c15a7998b"
+    },
+    {
+      "path": "recordings/myvoice-55_2026-09-14T22-25-28-717Z.raw",
+      "bytes": 102144,
+      "sha256": "696547aa30d6df0a5f426c34a41f9a85270cf418ef6314d9283bc463d8303bbe"
+    },
+    {
+      "path": "recordings/myvoice-55_2026-09-14T22-25-28-717Z.txt",
+      "bytes": 110,
+      "sha256": "ac64849f7640cf843450c70e4f28ae52237238b4ad7f7d2e057f03ab9aeaa743"
+    },
+    {
+      "path": "recordings/myvoice-56_2026-09-14T22-25-38-923Z.raw",
+      "bytes": 179968,
+      "sha256": "3cfb0f847f5a9375942879b1e65b4dcc95a4ba8f23feff99b518576a7b16a87b"
+    },
+    {
+      "path": "recordings/myvoice-56_2026-09-14T22-25-38-923Z.txt",
+      "bytes": 140,
+      "sha256": "64c4272fae69855f8a7f227ce0f16ec9f0877765318ad08de48fc8b734b55ea6"
+    },
+    {
+      "path": "recordings/myvoice-57_2026-09-14T22-25-44-802Z.raw",
+      "bytes": 131328,
+      "sha256": "10738e332467b57be24d0a8b948943677f024f69dbacf629a4c12743130bf480"
+    },
+    {
+      "path": "recordings/myvoice-57_2026-09-14T22-25-44-802Z.txt",
+      "bytes": 104,
+      "sha256": "18a62405b1c8bbccce42c8e2e44f8620c8a5ce3646cc53444576a7ced93429d2"
+    },
+    {
+      "path": "recordings/myvoice-58_2026-09-14T22-25-49-228Z.raw",
+      "bytes": 102144,
+      "sha256": "34c0b363cc96f350e7a9b066f5778e81beb4239ea07e8f8f972dbf48d28620c8"
+    },
+    {
+      "path": "recordings/myvoice-58_2026-09-14T22-25-49-228Z.txt",
+      "bytes": 119,
+      "sha256": "112d27fd0f0e323862c70809b5f5a0d09a0a66a439a3139c12244b843f2f9d6a"
+    },
+    {
+      "path": "recordings/myvoice-59_2026-09-14T22-35-09-470Z.raw",
+      "bytes": 111872,
+      "sha256": "56e24411bad94d1c7e9f5563141af61a8c01fb20e26b0cb9effc6663452ec884"
+    },
+    {
+      "path": "recordings/myvoice-59_2026-09-14T22-35-09-470Z.txt",
+      "bytes": 118,
+      "sha256": "215837cb41472023367880129289405276cbbd4c4ed645163e68be22259db82d"
+    },
+    {
+      "path": "recordings/myvoice-5_2026-09-14T21-57-48-504Z.raw",
+      "bytes": 321024,
+      "sha256": "57578805aaa0846801f9703f66f8c603334aa3829234033864c0bfc33b010632"
+    },
+    {
+      "path": "recordings/myvoice-5_2026-09-14T21-57-48-504Z.txt",
+      "bytes": 155,
+      "sha256": "257508f68b1c434d487c3e1f9abd69d8d45ade7673b4dc897fe4cc1ff912b933"
+    },
+    {
+      "path": "recordings/myvoice-60_2026-09-14T22-35-13-670Z.raw",
+      "bytes": 126464,
+      "sha256": "e294c2bcc4c06729afc50b47d88d820395573b00ca8712e82d313a857fa6a2fc"
+    },
+    {
+      "path": "recordings/myvoice-60_2026-09-14T22-35-13-670Z.txt",
+      "bytes": 136,
+      "sha256": "cf6f7c81298b1167a58e809522ef617a7b12b684fc6036ffc2ba21b5f818e5b2"
+    },
+    {
+      "path": "recordings/myvoice-61_2026-09-14T22-35-18-346Z.raw",
+      "bytes": 136192,
+      "sha256": "e4d384fd2bedf5b099682c9db615b66a49ebd6501c9cab15d69aeacbede3e0c5"
+    },
+    {
+      "path": "recordings/myvoice-61_2026-09-14T22-35-18-346Z.txt",
+      "bytes": 134,
+      "sha256": "3e1dd17fd63458965dba54780448cad81bd32177ac5c05c2fc9d1971d18b1e84"
+    },
+    {
+      "path": "recordings/myvoice-62_2026-09-14T22-35-22-603Z.raw",
+      "bytes": 160512,
+      "sha256": "9e1a54bf7f0fdb04c8d3264bcf8f2215edeb1ac033cb25a91c7842f3029626c8"
+    },
+    {
+      "path": "recordings/myvoice-62_2026-09-14T22-35-22-603Z.txt",
+      "bytes": 161,
+      "sha256": "ad68790b94682a98091491ecd71fc8842e22c981220a969be17ede5bc3c0880a"
+    },
+    {
+      "path": "recordings/myvoice-63_2026-09-14T22-35-27-794Z.raw",
+      "bytes": 175104,
+      "sha256": "60714cfebd20b94302f0a76021c01ef918845a593fa3de73635d0cdf4a6d46a3"
+    },
+    {
+      "path": "recordings/myvoice-63_2026-09-14T22-35-27-794Z.txt",
+      "bytes": 164,
+      "sha256": "7af9dda41b72fd6d98ac3b82129672c2670a2e31dc47a8ffd1142c8e7768918e"
+    },
+    {
+      "path": "recordings/myvoice-64_2026-09-14T22-35-34-507Z.raw",
+      "bytes": 155648,
+      "sha256": "e2153995702e0fec90da1ceec72271b781dcfa3128d9ffd4c4af0fcffd0b766d"
+    },
+    {
+      "path": "recordings/myvoice-64_2026-09-14T22-35-34-507Z.txt",
+      "bytes": 173,
+      "sha256": "65535cffe78aaac707eac59daf88dec465a473495907ae28a7bd6cbc16f786a7"
+    },
+    {
+      "path": "recordings/myvoice-65_2026-09-14T22-35-39-261Z.raw",
+      "bytes": 136192,
+      "sha256": "498d5f245898ccce0326242cc3845fa45d72fe3ffbb6f70631addd0d3fb2ed98"
+    },
+    {
+      "path": "recordings/myvoice-65_2026-09-14T22-35-39-261Z.txt",
+      "bytes": 149,
+      "sha256": "681beb5ad5cf4f4850e5db29800c2f728c27ec0e44348aabab9d86bdac5ae14f"
+    },
+    {
+      "path": "recordings/myvoice-66_2026-09-14T22-35-44-251Z.raw",
+      "bytes": 145920,
+      "sha256": "f3fc3b19f1eed75cf76415eb7f8a12ec6314109862c45db6bdd124e7c217155a"
+    },
+    {
+      "path": "recordings/myvoice-66_2026-09-14T22-35-44-251Z.txt",
+      "bytes": 149,
+      "sha256": "ec5a26f3cb7677c73569751af2c9fe33aaadae99b38136e4b4e7ae3e4ce32cb3"
+    },
+    {
+      "path": "recordings/myvoice-67_2026-09-14T22-35-48-814Z.raw",
+      "bytes": 160512,
+      "sha256": "8032ba30b2172237c019e51f03333f449a041a9b3f2c415f793cddd1cf2b42d9"
+    },
+    {
+      "path": "recordings/myvoice-67_2026-09-14T22-35-48-814Z.txt",
+      "bytes": 155,
+      "sha256": "345833acddfcfda457740e8b9bce17e891e9ebaa61dfa25938a7d58fde0842af"
+    },
+    {
+      "path": "recordings/myvoice-68_2026-09-14T22-35-53-978Z.raw",
+      "bytes": 214016,
+      "sha256": "36b5725ff153834171da1a8cdac848e0d2720372dabb957e96955a8eb0661614"
+    },
+    {
+      "path": "recordings/myvoice-68_2026-09-14T22-35-53-978Z.txt",
+      "bytes": 143,
+      "sha256": "525cdab11c2f4cd39a882c60b3502d41264d137794111953681e32a39838f77c"
+    },
+    {
+      "path": "recordings/myvoice-69_2026-09-14T22-36-01-346Z.raw",
+      "bytes": 189696,
+      "sha256": "6e6295db1fa11f41eee272ab690af237f3427cbb6ebd189b1104aadbb99f64dc"
+    },
+    {
+      "path": "recordings/myvoice-69_2026-09-14T22-36-01-346Z.txt",
+      "bytes": 164,
+      "sha256": "4a052ea0fa8cfa57d2d7d56dc616479b6ea7bd68d0ca0f427b65dc7581f101b3"
+    },
+    {
+      "path": "recordings/myvoice-6_2026-09-14T22-00-20-306Z.raw",
+      "bytes": 170240,
+      "sha256": "43a82103cec66d9c2185f3bcf8b4c0b2b82e465c5d3c2eade322ca4fa2bcd216"
+    },
+    {
+      "path": "recordings/myvoice-6_2026-09-14T22-00-20-306Z.txt",
+      "bytes": 141,
+      "sha256": "216edd54ec9d790011e1797e87151c0e6f094cb9a4271f955d7cf96ee41d905d"
+    },
+    {
+      "path": "recordings/myvoice-70_2026-09-14T22-36-07-476Z.raw",
+      "bytes": 145920,
+      "sha256": "2dc0d9387986ea13e2862b05bcc54218673c98961cb73b3591c7b4ecbc6eecdf"
+    },
+    {
+      "path": "recordings/myvoice-70_2026-09-14T22-36-07-476Z.txt",
+      "bytes": 155,
+      "sha256": "67c2e9c8d9d9a8489b1dba7d4291f8c39920f45dbe8126c01396aa42f343a2f4"
+    },
+    {
+      "path": "recordings/myvoice-71_2026-09-14T22-36-12-012Z.raw",
+      "bytes": 141056,
+      "sha256": "07a4150044d8c7ddf0e2f3008b04652b2cb1a8fbea7cd1b4712eb9c2905dfa4b"
+    },
+    {
+      "path": "recordings/myvoice-71_2026-09-14T22-36-12-012Z.txt",
+      "bytes": 155,
+      "sha256": "298f685f54e6b6ffdae4a3bedf214869b96e70ace9b29744f9b46abb2209d3a8"
+    },
+    {
+      "path": "recordings/myvoice-72_2026-09-14T22-36-17-278Z.raw",
+      "bytes": 82688,
+      "sha256": "26d6e8d63df12e32df8fc02409b4530a73715f555f0ad261718751f750725950"
+    },
+    {
+      "path": "recordings/myvoice-72_2026-09-14T22-36-17-278Z.txt",
+      "bytes": 104,
+      "sha256": "557406159eba64a3e409ae97ad075517312bdaf97cb7d130d42f30a79d430476"
+    },
+    {
+      "path": "recordings/myvoice-73_2026-09-14T22-36-20-871Z.raw",
+      "bytes": 145920,
+      "sha256": "a42404379324f102e9ab1226f0b41b122655e735e66faad80d85d97acbf864a1"
+    },
+    {
+      "path": "recordings/myvoice-73_2026-09-14T22-36-20-871Z.txt",
+      "bytes": 110,
+      "sha256": "25bec816c13ea10675c6e62c55624aa66bab570c4554beadf5201aa66df6f5dd"
+    },
+    {
+      "path": "recordings/myvoice-74_2026-09-14T22-36-25-078Z.raw",
+      "bytes": 102144,
+      "sha256": "e4d7aa671e4d1de0ea84ed7e352d285a7e0d7c9bf1a90cc9f43010572495a329"
+    },
+    {
+      "path": "recordings/myvoice-74_2026-09-14T22-36-25-078Z.txt",
+      "bytes": 101,
+      "sha256": "a3c4fa3745dbc35b312a67d26a356e1acc11e14c3250c83ba0303f395016cd82"
+    },
+    {
+      "path": "recordings/myvoice-75_2026-09-14T22-36-28-659Z.raw",
+      "bytes": 102144,
+      "sha256": "b34cd1f79fb70ecc60d410a7e10fb5d257717f9f763707c61d3e5beedf6bb21a"
+    },
+    {
+      "path": "recordings/myvoice-75_2026-09-14T22-36-28-659Z.txt",
+      "bytes": 110,
+      "sha256": "93b75d942049048a26a30dde05d2f7746e4bb50d790bedc228838ec71910ac76"
+    },
+    {
+      "path": "recordings/myvoice-76_2026-09-14T22-36-32-303Z.raw",
+      "bytes": 155648,
+      "sha256": "6b226b6b8ef9e0dc3b8981a9f8f82bc70ebdbbbcb455db245e8f70c600cbe471"
+    },
+    {
+      "path": "recordings/myvoice-76_2026-09-14T22-36-32-303Z.txt",
+      "bytes": 140,
+      "sha256": "33372dcf1ae0ea69403344622ded90112308e5d21d80644267bc408beb574338"
+    },
+    {
+      "path": "recordings/myvoice-77_2026-09-14T22-36-37-065Z.raw",
+      "bytes": 214016,
+      "sha256": "c2ee43965b5f4303e848f4de1885fd786a2942dd313c87d86683ecf654afe3a6"
+    },
+    {
+      "path": "recordings/myvoice-77_2026-09-14T22-36-37-065Z.txt",
+      "bytes": 163,
+      "sha256": "e43e54dbbddb06741428cbe3b877b67fffe3442a8d140eb2d19b4b508c5c63c2"
+    },
+    {
+      "path": "recordings/myvoice-78_2026-09-14T22-36-43-616Z.raw",
+      "bytes": 179968,
+      "sha256": "6242ba290f93e02cf09f3276b4054269e7be0dceebed96d3b16c4bf9d5cabff6"
+    },
+    {
+      "path": "recordings/myvoice-78_2026-09-14T22-36-43-616Z.txt",
+      "bytes": 168,
+      "sha256": "2f2b4df76d50aa9618c26fa95d208c99360926a49791fc2a0580f38e81b33170"
+    },
+    {
+      "path": "recordings/myvoice-79_2026-09-14T22-36-49-646Z.raw",
+      "bytes": 131328,
+      "sha256": "093bbff157d193e11346d25d5a71ac76b2582ec5383248a0d137258bbd02dff7"
+    },
+    {
+      "path": "recordings/myvoice-79_2026-09-14T22-36-49-646Z.txt",
+      "bytes": 152,
+      "sha256": "f97f712a1a4bbe6ca9a2caf8db7b023a8f9b7e625394ce24ba1b04afa6bda7be"
+    },
+    {
+      "path": "recordings/myvoice-7_2026-09-14T22-00-26-836Z.raw",
+      "bytes": 121600,
+      "sha256": "dc0a0e54f30405e642d562be388a207811cbca9086a856bbd120caee4c5d4e68"
+    },
+    {
+      "path": "recordings/myvoice-7_2026-09-14T22-00-26-836Z.txt",
+      "bytes": 103,
+      "sha256": "cf48f912c3ae8dcd8cadb40feb995e20644552ec53f2457c2565fa71d99f1f87"
+    },
+    {
+      "path": "recordings/myvoice-80_2026-09-14T22-36-53-895Z.raw",
+      "bytes": 199424,
+      "sha256": "1ce917d37197db25ece516ad7b76bfc1f8eed89e3d17a3c01a21a08522549d2d"
+    },
+    {
+      "path": "recordings/myvoice-80_2026-09-14T22-36-53-895Z.txt",
+      "bytes": 143,
+      "sha256": "30c1b839c4c46093f79618294d552271f86f3eafe95f2f22eee20589337799ea"
+    },
+    {
+      "path": "recordings/myvoice-81_2026-09-14T22-36-59-550Z.raw",
+      "bytes": 165376,
+      "sha256": "f05a3ffd5bf362ae9c7ade111d1fd35d37c25898913f1dcef4c912e89f62fef9"
+    },
+    {
+      "path": "recordings/myvoice-81_2026-09-14T22-36-59-550Z.txt",
+      "bytes": 144,
+      "sha256": "d7901c76c63e0cb96bc164f2213273f07f2f828754b8d3d2c58aa7287eb100fe"
+    },
+    {
+      "path": "recordings/myvoice-82_2026-09-14T22-37-10-036Z.raw",
+      "bytes": 184832,
+      "sha256": "9d777c1f1d89fa6a609c0128d81ac90cd7b3f6ff01e76a433a6a87a195e885f6"
+    },
+    {
+      "path": "recordings/myvoice-82_2026-09-14T22-37-10-036Z.txt",
+      "bytes": 158,
+      "sha256": "19f8e806aae25e88fa79bc7a71cdce431ea825bbd429edb2991306d1c49a50e2"
+    },
+    {
+      "path": "recordings/myvoice-83_2026-09-14T22-37-15-489Z.raw",
+      "bytes": 189696,
+      "sha256": "1e2e499517f6dedb28c054a1d3dae76931b41f94393f1b923a23fb1e1aa6d0e7"
+    },
+    {
+      "path": "recordings/myvoice-83_2026-09-14T22-37-15-489Z.txt",
+      "bytes": 154,
+      "sha256": "f37a13161a5e010de89e79fba69df25dc86d1b7019e687ed8e2b472a41119d32"
+    },
+    {
+      "path": "recordings/myvoice-84_2026-09-14T22-37-20-994Z.raw",
+      "bytes": 165376,
+      "sha256": "04c6dfcdd862958934baf6dff39e131770b704f1a08336ed30bb3f1f0c575ef0"
+    },
+    {
+      "path": "recordings/myvoice-84_2026-09-14T22-37-20-994Z.txt",
+      "bytes": 170,
+      "sha256": "80399680bb0535d8a030d7bff9d68e179d91c746b8366f625ea7dd5f56cf8a6f"
+    },
+    {
+      "path": "recordings/myvoice-85_2026-09-14T22-37-25-876Z.raw",
+      "bytes": 199424,
+      "sha256": "472a546b2033dffe78a33b82d8da8eb052c512bfbc73a151820ab39253b3d125"
+    },
+    {
+      "path": "recordings/myvoice-85_2026-09-14T22-37-25-876Z.txt",
+      "bytes": 142,
+      "sha256": "75d9578452072e30c04a8464198f1bcc833e9df2781a14318139c6eeb12889f2"
+    },
+    {
+      "path": "recordings/myvoice-86_2026-09-14T22-37-31-931Z.raw",
+      "bytes": 92416,
+      "sha256": "e2a8e72745b5166ae9df3866e80d5c054810a5cb4df05908cb520bdf480a615e"
+    },
+    {
+      "path": "recordings/myvoice-86_2026-09-14T22-37-31-931Z.txt",
+      "bytes": 107,
+      "sha256": "c3f61fda1d25f282d46118068ca8a19c5f273787d987571c7e05d30daa4f28b2"
+    },
+    {
+      "path": "recordings/myvoice-87_2026-09-14T22-37-35-116Z.raw",
+      "bytes": 131328,
+      "sha256": "796ee24a6fdbea692c48ec2be1980ba9f3048541e21ce2686b5ed3718d1a2a56"
+    },
+    {
+      "path": "recordings/myvoice-87_2026-09-14T22-37-35-116Z.txt",
+      "bytes": 146,
+      "sha256": "7bbc37f2f76d1c3d7b4a49b11345373d11084a9d77897e8127e472b282c3f62e"
+    },
+    {
+      "path": "recordings/myvoice-88_2026-09-14T22-37-39-014Z.raw",
+      "bytes": 87552,
+      "sha256": "698f1cfeb5d5ca436059617a018044de3e1b0b1a85f40dd2cfea187660fdce18"
+    },
+    {
+      "path": "recordings/myvoice-88_2026-09-14T22-37-39-014Z.txt",
+      "bytes": 113,
+      "sha256": "38af0c2ad6dc30f0d137918d7b82ca2c82ceb58f5f4a1b77d4d7a31fe2dc9ae8"
+    },
+    {
+      "path": "recordings/myvoice-89_2026-09-14T22-37-42-627Z.raw",
+      "bytes": 155648,
+      "sha256": "a3411d331855054b4466f3000fe5933fd856c964984cf1415aabaa9bc34a258b"
+    },
+    {
+      "path": "recordings/myvoice-89_2026-09-14T22-37-42-627Z.txt",
+      "bytes": 158,
+      "sha256": "34f292e4b01b55600f45a3a771ec8c3d7980b3b10ad3ba81cd850668a25d7a92"
+    },
+    {
+      "path": "recordings/myvoice-8_2026-09-14T22-00-31-138Z.raw",
+      "bytes": 189696,
+      "sha256": "ea0b6311193e196d5257361300de61b8a17285f40c4ed856972c9ea8d0bb6378"
+    },
+    {
+      "path": "recordings/myvoice-8_2026-09-14T22-00-31-138Z.txt",
+      "bytes": 160,
+      "sha256": "91aac530bd9c740b00cbc112d253065997d8a016120f91a2a91a3e24c36002be"
+    },
+    {
+      "path": "recordings/myvoice-90_2026-09-14T22-37-47-577Z.raw",
+      "bytes": 136192,
+      "sha256": "f4c3b7f684e07f23b3e93ac79a47425807f2e6eb5adaa3c4dba9fd03616749e4"
+    },
+    {
+      "path": "recordings/myvoice-90_2026-09-14T22-37-47-577Z.txt",
+      "bytes": 155,
+      "sha256": "07f8c166a1d5ace2c14aabe5a5b345977e6405eac64725f84488d8d86238fcf7"
+    },
+    {
+      "path": "recordings/myvoice-91_2026-09-14T22-37-51-781Z.raw",
+      "bytes": 145920,
+      "sha256": "5df1783f7c1c7373fa55e8e4a8549fa892a3235b580d599dc2d4b63197151ac3"
+    },
+    {
+      "path": "recordings/myvoice-91_2026-09-14T22-37-51-781Z.txt",
+      "bytes": 155,
+      "sha256": "6c42e5080e6715842f80540520a7c539009f32487f61052d4e62c2d81cac659f"
+    },
+    {
+      "path": "recordings/myvoice-92_2026-09-14T22-37-56-293Z.raw",
+      "bytes": 145920,
+      "sha256": "06e4bbc37260fa7d80ef1f55a98d2655fcb4f693c75ee79f7507fa3f761507db"
+    },
+    {
+      "path": "recordings/myvoice-92_2026-09-14T22-37-56-293Z.txt",
+      "bytes": 141,
+      "sha256": "442310c374d06552263fc270da20736ba098c64d72d1cc572456c2d9e0aa55bf"
+    },
+    {
+      "path": "recordings/myvoice-93_2026-09-14T22-38-02-736Z.raw",
+      "bytes": 131328,
+      "sha256": "782b247519a9f374e0d81ed60c0754f458f4c0b2100077c63cbea7a00d3909e1"
+    },
+    {
+      "path": "recordings/myvoice-93_2026-09-14T22-38-02-736Z.txt",
+      "bytes": 99,
+      "sha256": "51d38ab13c6cdbf12bcec6fdd8082b4511b064277770d057913b500912632ab2"
+    },
+    {
+      "path": "recordings/myvoice-94_2026-09-14T22-38-16-658Z.raw",
+      "bytes": 131328,
+      "sha256": "4c480fe7a7f4226119acc666cc64e9fc40203d3d2c7b4e3a991ccc666dad4c6c"
+    },
+    {
+      "path": "recordings/myvoice-94_2026-09-14T22-38-16-658Z.txt",
+      "bytes": 111,
+      "sha256": "31bd3245f3d4266861c9864ee7fc4379fb1d9e65cbad93c55fb100956d4a7954"
+    },
+    {
+      "path": "recordings/myvoice-95_2026-09-14T22-38-23-223Z.raw",
+      "bytes": 102144,
+      "sha256": "3d0db435a146f412e41d1de5e2c5a0c8d644048ff28247d7825f633bc9880e1d"
+    },
+    {
+      "path": "recordings/myvoice-95_2026-09-14T22-38-23-223Z.txt",
+      "bytes": 119,
+      "sha256": "56ac34cb4e373a5843ef3e4b6d312e13a518136853420ab811a7b3ef0b468ae0"
+    },
+    {
+      "path": "recordings/myvoice-96_2026-09-14T22-38-26-804Z.raw",
+      "bytes": 107008,
+      "sha256": "c09d06d1d3db50efff12ef9dc26c8fb81c4538484bf513b2fd70003790493fa5"
+    },
+    {
+      "path": "recordings/myvoice-96_2026-09-14T22-38-26-804Z.txt",
+      "bytes": 146,
+      "sha256": "fbac272252ee92a3214c55d7a10164d7d85d7d666a42ea5d50bc799a1b57bd67"
+    },
+    {
+      "path": "recordings/myvoice-97_2026-09-14T22-38-30-297Z.raw",
+      "bytes": 179968,
+      "sha256": "98ee332af3f01fb9265d948e3ff53fad5a179f6e6d60c73de29c417c1734e8f1"
+    },
+    {
+      "path": "recordings/myvoice-97_2026-09-14T22-38-30-297Z.txt",
+      "bytes": 116,
+      "sha256": "8418484e9fbebd40a565ab4616694fbe14864dec78c655b7fc3e16c8cf3a5830"
+    },
+    {
+      "path": "recordings/myvoice-98_2026-09-14T22-38-35-265Z.raw",
+      "bytes": 223744,
+      "sha256": "4248b35ace9358b0900a3c451021f9731f46f1bf434185e0f2471c5519252d11"
+    },
+    {
+      "path": "recordings/myvoice-98_2026-09-14T22-38-35-265Z.txt",
+      "bytes": 131,
+      "sha256": "713e7c57953d164222837c8abfe4443deddbd98d7554639a71608ec9eeebe6e2"
+    },
+    {
+      "path": "recordings/myvoice-99_2026-09-14T22-38-43-531Z.raw",
+      "bytes": 121600,
+      "sha256": "5edae748c5e31df4504d2dea1d171d259eb9fe226c4947f035b44629bc1b147f"
+    },
+    {
+      "path": "recordings/myvoice-99_2026-09-14T22-38-43-531Z.txt",
+      "bytes": 131,
+      "sha256": "659fad6ada4abed2b1223d46b9f58dd2e4d5c4f68fe263d5aaf084faf258e478"
+    },
+    {
+      "path": "recordings/myvoice-9_2026-09-14T22-00-36-807Z.raw",
+      "bytes": 160512,
+      "sha256": "2fd3f46ee51fdfb4fcd52ac6c3bc518ba5d3c2d6c5c1756934e30120baba0e2c"
+    },
+    {
+      "path": "recordings/myvoice-9_2026-09-14T22-00-36-807Z.txt",
+      "bytes": 158,
+      "sha256": "d80905584b8bdf5a0976b404a0364a5dcefa5311726b004c1f187c95df671eb0"
+    }
+  ],
+  "reference": {
+    "path": "george-recorded-reference.wav",
+    "sourceLabels": [
+      "myvoice-1_",
+      "myvoice-2_",
+      "myvoice-100_"
+    ],
+    "sha256": "a2083b0f0e71221f3c1cd24bcded9a65a9901d12825f26f4f5544ff90bd1bd7e"
+  },
+  "acceptedTakesCopied": 151
+}

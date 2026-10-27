@@ -1,0 +1,32 @@
+{
+  "majestic-george-local": {
+    "audio": {
+      "channels": 1,
+      "sampleRate": 24000,
+      "seconds": 11.505,
+      "sampleWidth": 2
+    },
+    "sha256": "41832c9fb9c3e951cacf29e5386f7a41d29f601f4a0f2c8c913a0b004c5f73d3",
+    "transcript": "Hi, this is George. My account number is 0042. The charge was $35. My appointment is in 2026.",
+    "checks": {
+      "accountDigits": true,
+      "year": true,
+      "amount35": true
+    }
+  },
+  "george-natural-bland": {
+    "audio": {
+      "channels": 1,
+      "sampleRate": 48000,
+      "seconds": 8.3,
+      "sampleWidth": 2
+    },
+    "sha256": "9407da140680558cecc444d22297ad34b6760597a0b14e4e711e4856c5228b22",
+    "transcript": "Hi, this is George. My account number is 0042. The charge was $35. My appointment is in 2026.",
+    "checks": {
+      "accountDigits": true,
+      "year": true,
+      "amount35": true
+    }
+  }
+}

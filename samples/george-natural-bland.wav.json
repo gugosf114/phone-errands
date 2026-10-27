@@ -1,0 +1,8 @@
+{
+  "voice_id": "f964580c-5349-4ca3-a4db-8ca422d540d2",
+  "spokenText": "Hi, this is George. My account number is zero zero four two. The charge was $35. My appointment is in 2026.",
+  "bytes": 796844,
+  "seconds": 1.2087033210118534,
+  "model": "btts-3",
+  "cost": "0.005000"
+}
