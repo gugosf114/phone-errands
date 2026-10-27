@@ -29,7 +29,7 @@ def owned_processes():
             if len(args) < 2 or args[0].split(b'/')[-1] != b'node' or args[1].split(b'/')[-1] != b'server_tmux.js':
                 continue
             env = dict(item.split(b'=', 1) for item in proc.joinpath('environ').read_bytes().split(b'\0') if b'=' in item)
-            if env.get(b'PERSONAL_ASSISTANT_BRIDGE') == b'1' or env.get(b'TMUX', b'').startswith(SOCKET.encode() + b','):
+            if env.get(b'PERSONAL_ASSISTANT_BRIDGE') == b'1' or env.get(b'TMUX', b'').startswith(SOCKET.encode() + b',') or env.get(b'PWD') == str(BRIDGE).encode():
                 found.append(int(proc.name))
         except (FileNotFoundError, PermissionError, ProcessLookupError):
             continue

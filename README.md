@@ -219,6 +219,7 @@ Runtime dependencies: native Termux, Debian PRoot, Python 3, Node.js 20, Bash, c
 | `scripts/install.py` | Install a committed revision, back up replaced files, restart the personal bridge, and save a deployment receipt |
 | `scripts/sync-vapi.py` | Apply/read back the exact personal Vapi configuration |
 | `scripts/check-idle.py` | Read the personal line’s active calls before a restart |
+| `scripts/verify-runtime.py` | Require local and public endpoints to report the installed revision |
 
 Install from native Termux:
 

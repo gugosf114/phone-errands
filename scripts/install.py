@@ -107,6 +107,7 @@ def main():
             run([TMUX, '-L', 'vapi-line', 'new-session', '-d', '-s', 'control'])
         keeper = 'VOICE_LINE_FIRST_WAIT=0 /data/data/com.termux/files/usr/bin/sh ' + str(BOOT)
         run([TMUX, '-L', 'vapi-line', 'respawn-pane', '-k', '-t', 'control', keeper])
+        run([PROOT, 'login', 'debian', '--', 'python3', '/root/.local/share/phone-errands/scripts/verify-runtime.py'])
         if args.sync_vapi:
             run([PROOT, 'login', 'debian', '--', 'python3', '/root/.local/share/phone-errands/scripts/sync-vapi.py', '--apply'])
         receipt = {'revision': revision, 'installedAt': stamp, 'files': installed, 'personalAssistantId': config['assistantId']}
