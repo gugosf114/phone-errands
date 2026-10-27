@@ -24,6 +24,21 @@ def main():
     jobs = sub.add_parser('jobs', help='List jobs or read one complete record')
     jobs.add_argument('id', nargs='?')
     sub.add_parser('status')
+    call = sub.add_parser('call', help='Read or control a shared call room')
+    call.add_argument('action',choices=['list','takeover','resume','end'])
+    call.add_argument('room_id',nargs='?')
+    call.add_argument('--summary')
+    sub.add_parser('questions', help='Read private questions from an active outbound call')
+    learn = sub.add_parser('learn', help='Save missing-field requirements from a saved support-chat transcript')
+    learn.add_argument('--transcript',required=True)
+    learn.add_argument('--source-id',required=True)
+    learn.add_argument('--account',required=True)
+    answer = sub.add_parser('answer', help='Send your answer back to the waiting call')
+    answer.add_argument('question_id'); answer.add_argument('answer')
+    thread = sub.add_parser('thread', help='Read or select shared phone/chat history')
+    thread.add_argument('--select'); thread.add_argument('--label'); thread.add_argument('--transcript')
+    thread.add_argument('--search');
+    thread.add_argument('--append'); thread.add_argument('--role', choices=['user','assistant'], default='user')
     profile = sub.add_parser('profile', help='Show saved field names or import identity facts')
     profile.add_argument('--import-file')
     sub.add_parser('accounts', help='List saved company accounts')
@@ -63,6 +78,21 @@ def main():
         result = request('POST', '/jobs', {'task': args.task, 'channel': args.channel})
     elif args.command == 'jobs':
         result = request('GET', '/jobs' + ('/' + args.id if args.id else ''))
+    elif args.command == 'call':
+        result=request('GET','/conferences') if args.action=='list' else request('POST','/conferences/'+args.action,{'room_id':args.room_id,'summary':args.summary})
+    elif args.command == 'questions':
+        result=request('GET','/questions')
+    elif args.command == 'learn':
+        from gap_learning import learn
+        result=learn({'call_id':'chat:'+args.source_id,'concatenated_transcript':Path(args.transcript).read_text()},account=args.account)
+    elif args.command == 'answer':
+        result=request('POST','/questions/answer',{'question_id':args.question_id,'answer':args.answer})
+    elif args.command == 'thread':
+        if args.select:result=request('POST','/conversation/select',{'id':args.select,'label':args.label,'transcript':args.transcript})
+        elif args.append:result=request('POST','/conversation/append',{'role':args.role,'text':args.append})
+        else:
+            from urllib.parse import urlencode
+            result=request('GET','/conversation'+('?' + urlencode({'query':args.search}) if args.search else ''))
     elif args.command == 'profile':
         if args.import_file:result=profile_store.save_identity(args.import_file)
         else:

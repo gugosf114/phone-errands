@@ -2,6 +2,8 @@
 
 George gives the assistant a goal by phone or chat. It finds a useful route, carries out the work, and returns the result with proof.
 
+The latest deployed baseline is `546455c`. The shared-history and call-control update below is in implementation review. Local checks and test calls await George’s approval. Twilio credentials and a dedicated number are still needed for the shared call room.
+
 This repository holds the personal Vapi line, the Claude brain bridge, phone errands, support-chat errands, shared job records, instructions, settings, and deployment commands. GitHub is the source of record. The installed phone files come from a committed revision of this repo.
 
 ## Purpose
@@ -68,7 +70,7 @@ flowchart TD
 
 | Part | Job |
 |---|---|
-| Vapi | Hears George, runs the fast conversation, speaks through Ava, and calls the three bridge tools |
+| Vapi | Hears George, runs the fast conversation, speaks through Ava, and calls the bridge tools |
 | Claude in Termux | Reasons about the task and uses files, browser controls, GitHub, phone controls, and the calling commands |
 | `phone-ask` | Calls a place and asks up to four questions |
 | `phone-do` | Runs a phone errand from a goal card, including menus, hold time, and conversation |
@@ -109,13 +111,18 @@ Both calling commands set `transfer_phone_number` and give the same handoff inst
 
 ## Voice tools
 
-The Vapi model has three tools:
+The versioned Vapi configuration defines these tools:
 
 | Tool | Behavior |
 |---|---|
 | `memory_lookup(topic)` | Searches the canonical memory index and related note files directly |
 | `brain_ask(question)` | Waits up to 20 seconds for a short brain answer; busy or longer work returns through the job path |
 | `brain_job(task)` | Queues work, returns a receipt, and lets George keep talking |
+| `conversation_context(query)` | Finds recent or topic-matched phone and chat history |
+| `pending_questions()` | Reads questions from the active outbound caller |
+| `answer_question(question_id, answer)` | Sends George’s answer back to that caller |
+| `call_rooms()` | Reads shared call rooms and their states |
+| `call_control(room_id, action, summary)` | Takes over, resumes, or ends the selected call on George’s request |
 
 The brain can search the saved Claude transcripts on the phone and use its existing phone controls to inspect screenshots. Those results reach the voice model as text.
 
@@ -273,7 +280,7 @@ bash /root/.vapi/bridge/phone.sh attach
 bash /root/.vapi/bridge/phone.sh restart
 ```
 
-`voice-use` selects a registered managed session. Full conversation sharing between the fast voice and an arbitrary existing chat is a next build. The current shared layer is the job record, recent call context, and the chosen brain session.
+`voice-use` selects the managed Claude session that runs jobs. `assistant thread --select NAME --transcript /absolute/chat.jsonl` selects a source transcript for shared context. Jobs run in the selected managed session and receive that context.
 
 ## Code and deployment
 
@@ -315,6 +322,10 @@ Local data locations:
 | `/root/.vapi/bridge/jobs/` | Shared job records and evidence |
 | `/root/.local/state/phone-errands/profile.json` | Personal identity, verification facts, and sources |
 | `/root/.local/state/phone-errands/accounts/` | Company account details and source records |
+| `/root/.local/state/phone-errands/threads/` | Shared phone/chat messages and transcript cursors |
+| `/root/.local/state/phone-errands/requirements/` | Missing-field requirements and their evidence |
+| `/root/.local/state/phone-errands/questions/` | Pending private questions and answers |
+| `/root/.local/state/phone-errands/conferences/` | Shared call state and provider call IDs |
 | `/root/.bland/calls/` | Question-call reports and transcripts |
 | `/root/.bland/errands/` | Phone-errand cards, reports, and transcripts |
 | `/root/.local/state/phone-errands/receipt-outbox/` | Receipts waiting to attach |
@@ -326,15 +337,64 @@ Credentials stay in local files: Vapi in `/root/.gmail/aicalls.env`, Bland in `/
 
 The saved `REVISION` and authenticated `/status` response identify the running code. Deployment verification uses source syntax checks, the local/public status responses, process ownership, installed-file hashes, and Vapi configuration readback.
 
+## Shared phone and chat history
+
+`voice/conversations.js` stores phone turns, selected Claude or Codex transcript messages, and messages added through `assistant thread --append`. Each personal call keeps its original thread. The bridge sends recent history into Vapi when the call starts and checks for new chat messages every two seconds while it is active. `conversation_context` searches older messages by topic.
+
+The managed Claude session loads recent phone turns on each prompt through `scripts/claude-thread-context.py`. Installation refreshes the default brain session with the hook and resumes its saved transcript. A separate existing chat contributes its transcript to the shared history; that chat can read phone history with `assistant thread`.
+
+```sh
+assistant thread
+assistant thread --select project --label "Current project" --transcript /absolute/chat.jsonl
+assistant thread --search "the refund"
+assistant thread --append "The company gave me reference ABC."
+```
+
+## Learning missing details
+
+After an outbound call, `gap_learning.py` looks for questions the caller could not answer. It saves the field needed, the question, and its source call ID. Repeat processing uses that ID to avoid duplicate entries. Account context includes these requirements before the next errand. Personal values come from George’s profile, account facts, or his answer.
+
+Support-chat work saves the conversation and uses the same learner:
+
+```sh
+assistant learn --account COMPANY --source-id JOB_ID --transcript /private/chat.txt
+```
+
+The text uses `User:` for the company and `Assistant:` for the messages sent as George. Recognized details include account numbers, service addresses, contact details, birth date, verification digits, plan, date, and reference number.
+
+## Private questions during calls
+
+Managed calls receive Bland tools `ask_george` and `get_george_answer`. A question carries the exact job ID and provider call ID. The bridge sends it to George’s active personal Vapi call or posts a notification on his phone. George can answer by voice or from a chat:
+
+```sh
+assistant questions
+assistant answer QUESTION_ID "The answer"
+```
+
+The caller keeps the conversation going and polls for the answer. Questions stay open for two minutes. The job record stores the question and actual answer. The direct Vapi answer path works while the Claude brain is busy.
+
+## Taking over and returning a call
+
+The optional Twilio conference keeps the business connected while George and the AI switch places. On the first human handoff, Bland transfers the business to a dedicated number. That number opens the room and rings George’s saved cell. George returns the call to AI with a short handover. A new Bland call joins the same room using George Natural, the original task, and his handover. George’s leg then ends. A later takeover rings him again.
+
+```sh
+assistant call list
+assistant call takeover ROOM_ID
+assistant call resume ROOM_ID --summary "They offered a credit. Ask for its confirmation number."
+assistant call end ROOM_ID
+```
+
+George’s resume request authorizes AI to continue with the person on that specific call. The room uses the original errand’s time allowance. A failed AI return keeps George’s connection. Owner unavailability ends the business connection with a brief spoken message. Call records contain every AI segment and George’s handover summaries.
+
+The room uses `/root/.twilio/voice-api.json`: `accountSid`, `authToken`, `conferenceNumber`, `phoneNumberSid`, and `enabled`. `scripts/setup-call-room.py` reads owned numbers and configures only a number labeled `George personal call room`. Its explicit purchase option accepts the exact number George approved. Its `--enable` option activates the room for managed calls. Current public US prices list a local number at $1.15/month and conference use from $0.0018 per participant per minute, plus phone legs.
+
+Bland V2 tool invocation, transfer caller-ID matching, phone notifications, and the complete takeover/return sequence need live verification. [docs/shared-calls-status.md](docs/shared-calls-status.md) records the implementation and activation gates.
+
 ## Next builds
 
-1. Observe one personal voice call while a useful job runs and its report returns, then check the phone handoff on a live call.
-2. Share a continuous conversation history between a chosen ongoing chat and the fast voice, with clear speaker labels and current task state.
-3. Let an outbound business call bring a question back to George’s private call and relay his answer while the business waits.
-4. Keep track of goals George has asked the assistant to follow, and bring back changes and results.
-5. Measure outcomes: money recovered, credits obtained, fees removed, access restored, useful answers, and time saved.
-
-The first integration exercise is one real inquiry, with its call/chat transcript and confirmation attached to the original job record.
+1. Verify shared history, a private question and answer, and an outgoing call’s complete takeover/return sequence.
+2. Run one useful inquiry with its transcript and confirmation attached to the original job.
+3. Measure money recovered, fees removed, access restored, answers obtained, and time saved.
 
 ## References
 
@@ -346,3 +406,11 @@ The first integration exercise is one real inquiry, with its call/chat transcrip
 - [Vapi background speech filtering](https://docs.vapi.ai/documentation/assistants/conversation-behavior/background-speech-denoising)
 - [Bland API tools during calls](https://docs.bland.ai/tutorials/tools/custom-api)
 - [Bland pricing](https://www.bland.ai/pricing)
+
+- [Bland active transfer API](https://docs.bland.ai/api-v1/post/calls-active-transfer)
+- [Twilio conference behavior](https://www.twilio.com/docs/voice/twiml/conference)
+- [Twilio US voice pricing](https://www.twilio.com/en-us/voice/pricing/us)
+- [OpenClaw shared voice sessions](https://github.com/openclaw/openclaw)
+- [Private caller questions](https://github.com/TristanBrotherton/openclaw-voice-call-realtime)
+- [Callwright missing-detail learning](https://github.com/topness-msft/callwright)
+- [Call-use takeover and resume](https://github.com/agent-next/call-use)

@@ -15,7 +15,7 @@ def request(method, path, body=None):
     req = urllib.request.Request(BRIDGE_URL + path, method=method,
         headers={'X-Line-Key': key, 'Content-Type': 'application/json'},
         data=json.dumps(body).encode() if body is not None else None)
-    with urllib.request.urlopen(req, timeout=10) as response:
+    with urllib.request.urlopen(req, timeout=30 if path.startswith('/conferences/') else 10) as response:
         return json.load(response)
 
 
