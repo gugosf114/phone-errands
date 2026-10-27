@@ -34,6 +34,8 @@ When contacting another person by phone or support chat, the system speaks in fi
 - For an errand, use George’s goal, account facts, and any instructions he gives about spending, plans, timing, or other choices.
 - Save the result and its evidence in the shared job record.
 
+The speaking style starts from George’s direct instructions. [config/behavior.json](config/behavior.json) holds those rules and the current phone/chat rollout. A style-examples list is available for approved examples of his wording.
+
 The exact voice instructions are in [prompts/voice.txt](prompts/voice.txt). The brain’s work instructions are in [prompts/brain-errand.md](prompts/brain-errand.md).
 
 ## One connected system
@@ -66,6 +68,35 @@ flowchart TD
 | Shared records | Connect the original request, actions, provider call IDs, reports, and proof |
 | ngrok | Gives the phone bridge a fixed public address |
 | Native Termux keeper | Checks the personal line every minute and restores its processes |
+
+## Shared personal and company information
+
+The private application profile is `/root/.local/state/phone-errands/profile.json`. It contains George’s preferred and legal names, birth date, address, phone, regular Gmail, and his supplied last four digits for verification. Each fact carries a source. [config/profile.example.json](config/profile.example.json) shows the input shape. The initial name, birth date, address, and phone came from his existing saved facts; Gmail and verification digits came from his October 27 instructions.
+
+Company files live under `/root/.local/state/phone-errands/accounts/`. They hold the company, account number, plan, billing facts, support contacts, and account-specific identity fields. The example structure is [config/account.example.json](config/account.example.json).
+
+The selection order is personal defaults, then company identity overrides, then current goal-card identity overrides. Each job gets the basic profile and speaking rules. Account jobs and `assistant context --verification` load the verification fields. `phone-do` includes the shared facts and selected account details in its call instructions. Support-chat work reads the same context through the brain.
+
+```sh
+assistant profile
+assistant context --verification
+assistant accounts
+assistant account COMPANY --import-file /path/to/account.json
+assistant context --account COMPANY --verification
+assistant profile --import-file /path/to/identity-update.json
+```
+
+`assistant profile` shows field names and sources. `assistant context` returns the actual selected facts for the requested work. Code and example schemas live in GitHub; personal values live in the application’s private data directory.
+
+## Current conversation rollout
+
+- Support chat handles automated systems and people.
+- Phone errands handle menus and AI agents.
+- When a person answers the phone, the caller says: **“One second, the caller will be right with you.”**
+- The caller then uses Bland’s transfer action to ring George’s cell, read from the shared profile.
+- Human phone conversations become a later stage after George is satisfied with their live behavior.
+
+Both calling commands set `transfer_phone_number` and give the same handoff instruction. The opening is chosen after the recipient’s greeting so that the human-handoff branch can take precedence.
 
 ## Voice tools
 
@@ -156,7 +187,7 @@ A recorded personal call before these timing changes averaged `2.0385` seconds p
 
 | Setting | `phone-ask` | `phone-do` |
 |---|---|---|
-| Opening | “Hi, this is George. I have a couple of quick questions.” | “Hi, this is George. I’m calling about my account.” |
+| Opening | Chosen after the greeting; live people receive the handoff line | Chosen after the greeting; live people receive the handoff line |
 | Voice | `george-natural`, the saved Bland clone | `george-natural` by default; card can choose `voice` |
 | Question count | Up to four | Goal-driven conversation |
 | Call duration cap | Five minutes | Twelve minutes by default; card can set `minutes` |
@@ -243,7 +274,7 @@ Runtime dependencies: native Termux, Debian PRoot, Python 3, Node.js 20, Bash, c
 |---|---|
 | `voice/` | HTTP bridge, queue, Claude transcript reader, job ledger, and process control |
 | `phone-ask`, `phone-do` | Bland calling commands |
-| `assistant`, `support-chat`, `assistant_records.py`, `voice_catalog.py`, `speech_text.py` | Shared work entrypoints and receipts |
+| `assistant`, `support-chat`, `assistant_records.py`, `voice_catalog.py`, `speech_text.py`, `profile_store.py` | Shared work entrypoints and receipts |
 | `prompts/` | Voice and brain behavior |
 | `config/` | Personal Vapi settings and tool definitions |
 | `bin/` | Managed-session commands and native keeper |
@@ -273,6 +304,8 @@ Local data locations:
 | Location | Data |
 |---|---|
 | `/root/.vapi/bridge/jobs/` | Shared job records and evidence |
+| `/root/.local/state/phone-errands/profile.json` | Personal identity, verification facts, and sources |
+| `/root/.local/state/phone-errands/accounts/` | Company account details and source records |
 | `/root/.bland/calls/` | Question-call reports and transcripts |
 | `/root/.bland/errands/` | Phone-errand cards, reports, and transcripts |
 | `/root/.local/state/phone-errands/receipt-outbox/` | Receipts waiting to attach |
@@ -286,7 +319,7 @@ The saved `REVISION` and authenticated `/status` response identify the running c
 
 ## Next builds
 
-1. Observe one personal voice call while a useful job runs and its report returns.
+1. Observe one personal voice call while a useful job runs and its report returns, then check the phone handoff on a live call.
 2. Share a continuous conversation history between a chosen ongoing chat and the fast voice, with clear speaker labels and current task state.
 3. Let an outbound business call bring a question back to George’s private call and relay his answer while the business waits.
 4. Keep track of goals George has asked the assistant to follow, and bring back changes and results.

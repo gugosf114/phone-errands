@@ -1,0 +1,17 @@
+{
+  "identity": {
+    "preferred_name": "Example name",
+    "legal_name": "Example legal name",
+    "email": "person@example.com",
+    "phone": "+15555550123",
+    "date_of_birth": "1990-01-01",
+    "address": {
+      "street": "Example street",
+      "city": "Example city",
+      "state": "CA",
+      "postal_code": "00000",
+      "country": "US"
+    },
+    "ssn_last4": "0042"
+  }
+}

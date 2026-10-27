@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from assistant_records import request, read_card, receipt, flush
 from voice_catalog import catalog, resolve_call_voice
+import profile_store
 
 
 def main():
@@ -23,6 +24,15 @@ def main():
     jobs = sub.add_parser('jobs', help='List jobs or read one complete record')
     jobs.add_argument('id', nargs='?')
     sub.add_parser('status')
+    profile = sub.add_parser('profile', help='Show saved field names or import identity facts')
+    profile.add_argument('--import-file')
+    sub.add_parser('accounts', help='List saved company accounts')
+    acct = sub.add_parser('account', help='Read or import a company account')
+    acct.add_argument('key')
+    acct.add_argument('--import-file')
+    ctx = sub.add_parser('context', help='Read the personal and account facts for an errand')
+    ctx.add_argument('--account')
+    ctx.add_argument('--verification', action='store_true')
     voice = sub.add_parser('voice', help='Render a preview of an imported George voice')
     voice.add_argument('--voice', choices=['george-natural', 'majestic-george'], default='george-natural')
     voice.add_argument('--text', required=True)
@@ -53,6 +63,17 @@ def main():
         result = request('POST', '/jobs', {'task': args.task, 'channel': args.channel})
     elif args.command == 'jobs':
         result = request('GET', '/jobs' + ('/' + args.id if args.id else ''))
+    elif args.command == 'profile':
+        if args.import_file:result=profile_store.save_identity(args.import_file)
+        else:
+            data=profile_store.load()
+            result={'savedFields':list(data.get('identity',{})), 'updatedAt':data.get('updatedAt'), 'sources':data.get('sources',{})}
+    elif args.command == 'accounts':
+        result=profile_store.accounts()
+    elif args.command == 'account':
+        result=profile_store.save_account(args.key,args.import_file) if args.import_file else profile_store.account(args.key)
+    elif args.command == 'context':
+        result=profile_store.context({'account':args.account} if args.account else {},args.verification)
     elif args.command == 'status':
         result = request('GET', '/status')
     elif args.command == 'flush':

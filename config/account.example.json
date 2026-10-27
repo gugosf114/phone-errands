@@ -1,0 +1,18 @@
+{
+  "company": "Example provider",
+  "identity": {
+    "email": "account-email@example.com"
+  },
+  "contact": {
+    "phone": "+15555550123",
+    "support_url": "https://example.com/support"
+  },
+  "facts": {
+    "account_number": "0042",
+    "plan": "Example plan",
+    "billing_issue": "George supplies the exact issue and dates"
+  },
+  "sources": {
+    "account_number": "User-provided account record"
+  }
+}

@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from assistant_records import receipt
 from voice_catalog import resolve_call_voice
 from speech_text import SPEECH_GUIDANCE, pronunciation_guide
+from profile_store import enrich, handoff, behavior
 
 BASE = "https://api.bland.ai/v1"
 HOME = "/root/.bland"
@@ -32,9 +33,11 @@ def money():
 
 
 def build_request(number, who, questions):
+    transfer,phone_stage=handoff()
+    style="\n".join(behavior()["style"]["rules"])
     qs = "\n".join(f"{i+1}. {q}" for i, q in enumerate(questions))
     task = f"""Speak in first person as George, with his authorization. You are calling {who}. Use "I" and "my" naturally.
-Your only job: get answers to the questions below, then end the call.
+Get answers from the automated menu or AI agent. Use the human handoff below when a person answers.
 
 Rules:
 - Ask ONE question at a time. Wait for the answer. Then ask the next one.
@@ -45,15 +48,21 @@ Rules:
 - When every question is answered, say "That's all, thank you so much, have a good one" and end the call.
 - Keep every sentence short. Do not chit-chat.
 
+Current phone stage (takes precedence over the question task):
+{phone_stage}
+
+Style:
+{style}
+
 Speech:
 {SPEECH_GUIDANCE}
 
 Questions:
 {qs}"""
     return {
+        **transfer,
         "phone_number": number,
         "task": task,
-        "first_sentence": "Hi, this is George. I have a couple of quick questions.",
         "wait_for_greeting": True,
         "voice": resolve_call_voice(),
         "record": False,

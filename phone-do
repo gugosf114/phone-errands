@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from assistant_records import receipt
 from voice_catalog import resolve_call_voice
 from speech_text import SPEECH_GUIDANCE, pronunciation_guide
+from profile_store import enrich, handoff, behavior
 
 BASE = "https://api.bland.ai/v1"
 HOME = "/root/.bland"
@@ -69,6 +70,8 @@ def parse_card(path):
                 if v: card[k].append(v)
             else:
                 section = None; card[k] = v
+    if card.get("account"):
+        card,_=enrich(card)
     for need in ("who", "number", "goal"):
         if not card.get(need):
             sys.exit(f"card is missing '{need}:'")
@@ -76,6 +79,9 @@ def parse_card(path):
 
 
 def build_request(card):
+    card,ctx=enrich(card,verification=True)
+    transfer,phone_stage=handoff()
+    style="\n".join(ctx["behavior"]["style"]["rules"])
     facts = "\n".join(f"- {f}" for f in card["facts"]) or "- (none given)"
     limits = "\n".join(f"- {l}" for l in card["limits"])
     fallback = card.get("fallback", "if refused, ask once for a supervisor or a one-time courtesy")
@@ -93,6 +99,12 @@ Limits. Never cross these:
 - Use George’s supplied identity and account facts accurately.
 {limits}
 
+Current phone stage (takes precedence over the errand task):
+{phone_stage}
+
+Style:
+{style}
+
 Speech:
 {SPEECH_GUIDANCE}
 
@@ -106,9 +118,9 @@ How to run the call:
 - Before ending, get a confirmation number or the representative's name. If they offer to email a confirmation and George's email is in the facts, give it.
 - Short sentences. One question at a time. No chit-chat."""
     return {
+        **transfer,
         "phone_number": card["number"],
         "task": task,
-        "first_sentence": "Hi, this is George. I’m calling about my account.",
         "wait_for_greeting": True,
         "voice": resolve_call_voice(card.get("voice", DEFAULT_VOICE)),
         "pronunciation_guide": pronunciation_guide(card["facts"]),
@@ -172,7 +184,7 @@ def main(argv):
     body = build_request(card)
     if dry:
         print(f"TO: {card['who']} {card['number']}  VOICE: {body['voice']}  CAP: {body['max_duration']} min (max ${body['max_duration']*0.14:.2f})")
-        print(f"OPENS WITH: {body['first_sentence']}\n"); print(body["task"]); return 0
+        print(f"OPENS WITH: {body.get('first_sentence', 'Chosen after the greeting; live people receive the saved handoff line')}\n"); print(body["task"]); return 0
     os.makedirs(f"{HOME}/errands", exist_ok=True)
     before = money()
     r = api("POST", "/calls", body)

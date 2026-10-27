@@ -17,7 +17,7 @@ const VOICE_TAG = '(Voice call with George, spoken aloud. Answer in 1-3 short sp
 const JOB_TAG = '(Job from George, given by voice on the phone line. Do it fully, start to finish. Keep the work in this turn until it is complete or blocked; do not send a background task and end early. When done, write the short outcome and its proof. The bridge returns your final answer to the phone call.) ';
 const BRAIN_INSTRUCTIONS=fs.readFileSync(__dirname+'/brain_instructions.txt','utf8');
 const REVISION=(()=>{try{return fs.readFileSync(__dirname+'/REVISION','utf8').trim();}catch(_){return 'working-tree';}})();
-const ASK_TAG = '(Question from George on the phone line, relayed by the fast line. Answer in 1-3 short plain sentences, answer first, no lists, no markdown, no paths or URLs.) ';
+const ASK_TAG = '(Question from George on the phone line, relayed by the fast line. For George’s personal/account facts, read assistant context and add --verification when needed. Answer in 1-3 short plain sentences, answer first, no lists, no markdown, no paths or URLs.) ';
 
 function logline(s){try{fs.appendFileSync(LOG,new Date().toTimeString().slice(0,8)+' '+s+'\n');}catch(e){}}
 function roomAlive(target=active()){ try{ tmux(['has-session','-t',target.tmux]); return tmux(['display-message','-p','-t',target.tmux,'#{pane_dead}']).trim()==='0'; }catch(e){ return false; } }
@@ -38,9 +38,12 @@ function pump(){
 }
 function queueJob(task,context,done){
   try {
+    const loaded=spawnSync('python3',['/root/.local/share/phone-errands/profile_store.py'],{input:JSON.stringify({card:context.card||{}}),encoding:'utf8',timeout:5000});
+    if(loaded.status!==0)throw new Error('Shared profile could not be loaded: '+(loaded.stdout||loaded.stderr||'').slice(0,300));
+    const shared=JSON.parse(loaded.stdout);
     const {job,existing}=jobs.create(task,context,active());
     if(existing)return done('This request is already '+job.state+'. Do not submit it again.',job);
-    const contextText=JSON.stringify({jobId:job.id,channel:job.channel,card:job.card,recentMessages:job.recentMessages});
+    const contextText=JSON.stringify({jobId:job.id,channel:job.channel,card:job.card,recentMessages:job.recentMessages,sharedProfile:shared});
     const instructions=BRAIN_INSTRUCTIONS.replaceAll('{{JOB_ID}}',job.id);
     enqueue({target:job.target,text:JOB_TAG+instructions+'\nJob context: '+contextText+'\nGeorge’s request: '+task,
       onStart:()=>{job.state='running';jobs.save(job);},
