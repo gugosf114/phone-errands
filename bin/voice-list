@@ -1,0 +1,10 @@
+#!/bin/bash
+export PATH="/root/.vapi/bridge/bin:$PATH"
+BDIR=/root/.vapi/bridge
+ACT=$(head -1 "$BDIR/active.txt" 2>/dev/null)
+echo "rooms (★ = phone rings here):"
+while IFS=$'\t' read -r n j; do
+  live=$(tmux has-session -t "$n" 2>/dev/null && echo up || echo gone)
+  star=" "; [ "$n" = "$ACT" ] && star="★"
+  echo "  $star $n  [$live]"
+done < "$BDIR/rooms.txt" 2>/dev/null

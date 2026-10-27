@@ -1,0 +1,25 @@
+#!/bin/bash
+export PATH="/root/.vapi/bridge/bin:$PATH"
+# voice-session [name] — open a phone-attachable claude session (its own tmux room),
+# make it the room the phone rings into, and drop you into it.
+set -u
+CLAUDE=/root/.local/bin/claude
+BDIR=/root/.vapi/bridge; PROJ=/root/.claude/projects/-root
+NAME="${1:-v$(date +%H%M%S)}"
+UUID=$(cat /proc/sys/kernel/random/uuid); JSONL="$PROJ/$UUID.jsonl"
+pause(){ timeout $(( ${1:-1000}/1000 + 2 )) node -e 'setTimeout(()=>process.exit(0),'"${1:-1000}"')' 2>/dev/null; }
+tmux kill-session -t "$NAME" 2>/dev/null
+printf -v VOICE_CMD '%q ' bash -lc "cd /root && IS_SANDBOX=1 $CLAUDE --dangerously-skip-permissions --model claude-sonnet-5-5 --session-id $UUID -n $NAME"
+tmux new-session -d -s "$NAME" -x 210 -y 55 "/data/data/com.termux/files/usr/bin/proot-distro login debian -- $VOICE_CMD"
+for i in $(seq 1 40); do
+  pane=$(tmux capture-pane -p -t "$NAME" 2>/dev/null)
+  printf '%s' "$pane" | grep -q 'trust this folder' && { tmux send-keys -t "$NAME" Down; pause 600; tmux send-keys -t "$NAME" Enter; pause 1500; }
+  printf '%s' "$pane" | grep -q 'bypass permissions on' && break
+  pause 1000
+done
+printf '%s\n%s\n' "$NAME" "$JSONL" > "$BDIR/active.txt"
+# registry (name<TAB>jsonl), upsert
+touch "$BDIR/rooms.txt"; grep -v -P "^$NAME\t" "$BDIR/rooms.txt" > "$BDIR/rooms.txt.tmp" 2>/dev/null; mv "$BDIR/rooms.txt.tmp" "$BDIR/rooms.txt"
+printf '%s\t%s\n' "$NAME" "$JSONL" >> "$BDIR/rooms.txt"
+echo "Room '$NAME' is now the phone room. Call 650-252-3543 to talk to THIS session."
+if [ -t 1 ]; then exec tmux attach -t "$NAME"; else echo "(run: tmux attach -t $NAME  to type/watch it)"; fi

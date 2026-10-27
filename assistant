@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""Send work to the same personal brain from a terminal or chat; inspect its receipts."""
+import argparse
+import json
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from assistant_records import request, read_card, receipt, flush
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest='command', required=True)
+    submit = sub.add_parser('submit', help='Give the brain a goal card')
+    submit.add_argument('card')
+    submit.add_argument('--channel', choices=['auto', 'phone', 'support-chat'])
+    submit.add_argument('--preview', action='store_true')
+    ask = sub.add_parser('ask', help='Give the brain a task in plain words')
+    ask.add_argument('task')
+    ask.add_argument('--channel', default='auto', choices=['auto', 'phone', 'support-chat'])
+    jobs = sub.add_parser('jobs', help='List jobs or read one complete record')
+    jobs.add_argument('id', nargs='?')
+    sub.add_parser('status')
+    sub.add_parser('flush', help='Attach receipts saved while the bridge was unavailable')
+    rec = sub.add_parser('receipt', help='Attach proof or an outcome to a job')
+    rec.add_argument('job_id')
+    rec.add_argument('--summary', required=True)
+    rec.add_argument('--channel', default='support-chat')
+    rec.add_argument('--outcome', choices=['achieved', 'partial', 'refused', 'needs-input', 'in-progress'], required=True)
+    rec.add_argument('--url')
+    rec.add_argument('--path')
+    rec.add_argument('--confirmation')
+    args = parser.parse_args()
+    if args.command == 'submit':
+        card = read_card(args.card)
+        body = {'task': card['goal'], 'card': card, 'channel': args.channel or card.get('channel', 'auto')}
+        result = body if args.preview else request('POST', '/jobs', body)
+    elif args.command == 'ask':
+        result = request('POST', '/jobs', {'task': args.task, 'channel': args.channel})
+    elif args.command == 'jobs':
+        result = request('GET', '/jobs' + ('/' + args.id if args.id else ''))
+    elif args.command == 'status':
+        result = request('GET', '/status')
+    elif args.command == 'flush':
+        result = {'receiptsAttached': flush()}
+    else:
+        result = receipt({k: v for k, v in vars(args).items() if k not in ('command', 'job_id') and v is not None}, args.job_id)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as error:
+        print(str(error), file=sys.stderr)
+        sys.exit(1)

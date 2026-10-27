@@ -1,0 +1,6 @@
+who: Example hardware store
+channel: phone
+number: replace with the store phone number
+goal: find out Sunday opening hours and whether propane is in stock
+facts:
+- the two questions are Sunday hours and propane availability

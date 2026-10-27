@@ -1,0 +1,21 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# ~/.termux/boot/16-voice-line — the voice line's keeper (George's phone call -> claude on this box).
+# At every boot, and then every 60 s: make sure the server, the ngrok tunnel and Vapi's pointer are all up.
+# Debian side does the work: /root/.vapi/bridge/phone.sh ensure. Log: ~/.agent-bridge/voice-line.log
+LOG="$HOME/.agent-bridge/voice-line.log"; mkdir -p "$(dirname "$LOG")"
+P=/data/data/com.termux/files/usr/bin
+LOCK="$HOME/.agent-bridge/voice-line.lock"
+if [ -f "$LOCK" ] && kill -0 "$(cat "$LOCK" 2>/dev/null)" 2>/dev/null; then exit 0; fi   # one keeper only
+echo $$ > "$LOCK"
+$P/termux-wake-lock 2>/dev/null
+printf '[%s] keeper start (pid %s)\n' "$(date '+%F %T')" "$$" >>"$LOG"
+sleep "${VOICE_LINE_FIRST_WAIT:-40}"
+while :; do
+  # Own tmux from native Termux so new Debian shells can reach it after reconnects.
+  if ! $P/tmux -L vapi-line has-session -t control 2>/dev/null; then
+    $P/tmux -L vapi-line new-session -d -s control
+  fi
+  out=$($P/proot-distro login debian -- bash /root/.vapi/bridge/phone.sh ensure 2>&1 | tail -1)
+  case "$out" in ok*) : ;; *) printf '[%s] %s\n' "$(date '+%F %T')" "$out" >>"$LOG" ;; esac
+  sleep 60
+done

@@ -1,0 +1,4 @@
+#!/bin/sh
+SOCKET=/data/data/com.termux/files/usr/var/run/tmux-10435/vapi-line
+[ -S "$SOCKET" ] || { echo "Personal voice session manager is not up; start the native voice-line keeper." >&2; exit 1; }
+exec /data/data/com.termux/files/usr/bin/tmux -S "$SOCKET" "$@"

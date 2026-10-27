@@ -1,0 +1,11 @@
+#!/bin/bash
+export PATH="/root/.vapi/bridge/bin:$PATH"
+# voice-use <name> — point the phone at an existing voice room
+set -u
+BDIR=/root/.vapi/bridge; NAME="${1:?usage: voice-use <name>}"
+LINE=$(grep -P "^$NAME\t" "$BDIR/rooms.txt" 2>/dev/null | tail -1)
+[ -z "$LINE" ] && { echo "no room named '$NAME' (see: voice-list)"; exit 1; }
+JSONL=$(printf '%s' "$LINE" | cut -f2)
+tmux has-session -t "$NAME" 2>/dev/null || { echo "room '$NAME' tmux window is gone"; exit 1; }
+printf '%s\n%s\n' "$NAME" "$JSONL" > "$BDIR/active.txt"
+echo "phone now rings into '$NAME'."

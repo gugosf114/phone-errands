@@ -7,16 +7,19 @@
   phone-ask --balance         # dollars left on Bland
 """
 import json, os, sys, time, urllib.request
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from assistant_records import receipt
 
 BASE = "https://api.bland.ai/v1"
 HOME = "/root/.bland"
-KEY = open(f"{HOME}/key").read().strip()
+
 GEORGE_CELL = "+14156328008"
 
 
 def api(method, path, body=None, timeout=30):
     req = urllib.request.Request(BASE + path, method=method,
-                                 headers={"authorization": KEY, "Content-Type": "application/json", "User-Agent": "curl/8.5.0", "Accept": "*/*"},
+                                 headers={"authorization": open(f"{HOME}/key").read().strip(), "Content-Type": "application/json", "User-Agent": "curl/8.5.0", "Accept": "*/*"},
                                  data=json.dumps(body).encode() if body is not None else None)
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read().decode())
@@ -28,7 +31,7 @@ def money():
 
 def build_request(number, who, questions):
     qs = "\n".join(f"{i+1}. {q}" for i, q in enumerate(questions))
-    task = f"""You are a polite, brief assistant making a phone call for George. You are calling {who}.
+    task = f"""Speak in first person as George, with his authorization. You are calling {who}. Use "I" and "my" naturally.
 Your only job: get answers to the questions below, then end the call.
 
 Rules:
@@ -36,7 +39,7 @@ Rules:
 - If they do not know, ask if someone else there can answer. If not, accept "I don't know" and move on.
 - Never make up facts. Never share anything about George beyond his first name.
 - If you reach a phone menu, pick the option for a person or general questions. If there is none, press 0.
-- If asked who you are, say: "I'm an AI assistant calling for George."
+- If asked who you are, say: "This is George." Answer direct questions about automation accurately.
 - When every question is answered, say "That's all, thank you so much, have a good one" and end the call.
 - Keep every sentence short. Do not chit-chat.
 
@@ -45,7 +48,7 @@ Questions:
     return {
         "phone_number": number,
         "task": task,
-        "first_sentence": "Hi! Quick heads up, this call may be recorded. I'm calling for George with a couple of quick questions. Is now okay?",
+        "first_sentence": "Hi, this is George. I have a couple of quick questions.",
         "wait_for_greeting": True,
         "voice": "maya",
         "record": False,
@@ -127,6 +130,7 @@ def main(argv):
     body = build_request(number, who, questions)
     if dry:
         print(json.dumps(body, indent=1)); return 0
+    os.makedirs(f"{HOME}/calls", exist_ok=True)
     before = money()
     r = api("POST", "/calls", body)
     cid = r.get("call_id")
@@ -139,6 +143,10 @@ def main(argv):
     rec = {"number": number, "who": who, "questions": questions, "answers": ans, "call": d,
            "when": time.strftime("%Y-%m-%d %H:%M %Z")}
     json.dump(rec, open(f"{HOME}/calls/{cid}.json", "w"), indent=1)
+    receipt({"channel": "phone", "provider": "bland", "externalId": cid,
+             "goal": "; ".join(questions), "who": who, "status": d.get("status"),
+             "summary": d.get("summary"), "answers": ans, "cost": d.get("price"),
+             "path": f"{HOME}/calls/{cid}.json"})
     report(rec)
     after = money()
     print(f"Balance left: ${after:.2f} (this call ${before-after:.2f})")

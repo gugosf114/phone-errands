@@ -1,0 +1,9 @@
+who: Example subscription provider
+channel: support-chat
+goal: ask whether a credit is available for the documented service outage
+url: https://example.com/support
+facts:
+- replace this line with the actual outage dates and account facts
+limits:
+- keep the current subscription plan
+fallback: ask which credit or billing adjustment applies to this outage

@@ -1,0 +1,116 @@
+{
+  "assistantId": "4346abeb-ee9e-4b7e-a8fa-57f20a32c325",
+  "phoneNumberId": "4077477e-40b4-4974-8e43-ad5ff10511fc",
+  "number": "+16502523543",
+  "brainModel": "claude-sonnet-5-5",
+  "bridgePort": 8790,
+  "tunnelDomain": "shivering-entree-humid.ngrok-free.dev",
+  "settings": {
+    "voice": {
+      "voiceId": "en-US-AvaNeural",
+      "provider": "azure"
+    },
+    "transcriber": {
+      "model": "nova-3",
+      "provider": "deepgram",
+      "fallbackPlan": {
+        "autoFallback": {
+          "enabled": true
+        }
+      }
+    },
+    "startSpeakingPlan": {
+      "waitSeconds": 0.2,
+      "smartEndpointingPlan": {
+        "provider": "livekit",
+        "waitFunction": "2000 / (1 + exp(-10 * (x - 0.5)))"
+      }
+    },
+    "backgroundSpeechDenoisingPlan": {
+      "smartDenoisingPlan": {
+        "enabled": true
+      }
+    },
+    "silenceTimeoutSeconds": 60,
+    "maxDurationSeconds": 1800,
+    "firstMessageMode": "assistant-speaks-first",
+    "firstMessage": "Hey George. What do you need?"
+  },
+  "model": {
+    "provider": "anthropic",
+    "model": "claude-sonnet-5",
+    "temperature": 0.5,
+    "maxTokens": 300
+  },
+  "tools": [
+    {
+      "type": "function",
+      "async": false,
+      "function": {
+        "name": "brain_job",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "task"
+          ],
+          "properties": {
+            "task": {
+              "type": "string",
+              "description": "Complete instructions: what to do, where, and what done looks like. Include relevant context from this call."
+            }
+          }
+        },
+        "description": "Give George\u2019s Claude brain a task or a lookup that may take time. Returns a queue receipt quickly so you can keep talking. The bridge sends the brain\u2019s final report into this same live call automatically. Use this for research, screen inspection, code, or other substantial work. Never say a queued job is finished."
+      },
+      "serverTimeoutSeconds": 15
+    },
+    {
+      "type": "function",
+      "async": false,
+      "function": {
+        "name": "brain_ask",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "question"
+          ],
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "The question, plain, one thing."
+            }
+          }
+        },
+        "description": "Ask the brain one short question about live facts or files. May wait up to 20 seconds. Prefer brain_job when George should be able to keep chatting while work runs. If the brain is busy or slow, the reply is queued and its report arrives automatically."
+      },
+      "messages": [
+        {
+          "type": "request-start",
+          "content": "Hold on, asking the brain."
+        }
+      ],
+      "serverTimeoutSeconds": 30
+    },
+    {
+      "type": "function",
+      "async": false,
+      "function": {
+        "name": "memory_lookup",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "topic"
+          ],
+          "properties": {
+            "topic": {
+              "type": "string",
+              "description": "One or two words: the project, person, or thing."
+            }
+          }
+        },
+        "description": "Quick look in George's memory notes about a project, person, or topic. About one second."
+      },
+      "serverTimeoutSeconds": 10
+    }
+  ]
+}

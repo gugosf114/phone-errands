@@ -21,26 +21,27 @@ Errand card (plain text):
   voice: ryan
 """
 import json, os, sys, time, urllib.request
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from assistant_records import receipt
 
 BASE = "https://api.bland.ai/v1"
 HOME = "/root/.bland"
-KEY = open(f"{HOME}/key").read().strip()
+
 DEFAULT_VOICE = "ryan"      # Professional American Male
 DEFAULT_MINUTES = 12
-
-DISCLOSURE = "I'm George's assistant, calling on his behalf. He authorized me to handle this and gave me his account details."
 
 QUESTIONS = [
     "Was George's goal achieved? Answer yes, no, or partly, then one sentence on what was agreed.",
     "What confirmation number, reference number, or representative name was given?",
     "What, if anything, must George do next?",
-    "Did they refuse to deal with a representative and insist on the account holder? yes or no, and what they asked for.",
+    "What verification or other step still requires George, and exactly what is needed?",
 ]
 
 
 def api(method, path, body=None, timeout=30):
     req = urllib.request.Request(BASE + path, method=method,
-        headers={"authorization": KEY, "Content-Type": "application/json", "User-Agent": "curl/8.5.0", "Accept": "*/*"},
+        headers={"authorization": open(f"{HOME}/key").read().strip(), "Content-Type": "application/json", "User-Agent": "curl/8.5.0", "Accept": "*/*"},
         data=json.dumps(body).encode() if body is not None else None)
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read().decode())
@@ -76,7 +77,7 @@ def build_request(card):
     facts = "\n".join(f"- {f}" for f in card["facts"]) or "- (none given)"
     limits = "\n".join(f"- {l}" for l in card["limits"])
     fallback = card.get("fallback", "if refused, ask once for a supervisor or a one-time courtesy")
-    task = f"""You are George's assistant. You make his phone calls for him as his authorized representative. You never claim to be George. Never mention anything about George's health or why he does not call himself. If asked who you are, say: "{DISCLOSURE}" If sincerely asked whether you are a real person or an AI, answer honestly in one short sentence and move on.
+    task = f"""Speak in first person as George. George authorizes this call and supplies the goal, facts, and instructions below. Use his name and say "I" and "my" when discussing his account. Answer direct questions about automation accurately.
 
 You are calling {card['who']}.
 George's goal for this call: {card['goal']}
@@ -86,23 +87,23 @@ Facts George gave you. Use only these. Never invent a fact:
 
 Limits. Never cross these:
 - Never agree to anything that costs money unless it is part of the goal above.
-- Never share a fact that is not listed above. If asked for something you do not have, say: "I don't have that with me. George can send it in writing."
-- Never say you are George or a human.
+- Never share a fact that is not listed above. If asked for something you do not have, say: "I don't have that with me. I can send it in writing."
+- Use George’s supplied identity and account facts accurately.
 {limits}
 
 How to run the call:
 - Phone menu: choose billing, account, or representative. Press 0 if stuck. On hold, wait quietly and say nothing.
 - Recorded announcements and hold music are not people. Speak only when a live person greets you.
-- When a live person answers, first say: "Hi, quick heads up, this call may be recorded." Then: "This is George's assistant, calling about his account," and the reason, in one short sentence.
+- When a live person answers, say: "Hi, this is George," and the reason for the call in one short sentence.
 - If asked to verify, give the account facts listed above.
-- If told they must speak with the account holder: say once that George authorized you, then ask if they can verify with the account details or note the authorization on the account. If still refused, ask exactly which form or step adds an authorized person to the account, write down the answer, thank them, and end the call.
+- Complete verification using the supplied account facts. If a step requires George to enter a code, approve a device prompt, or supply a missing fact, capture that exact step and return it to him.
 - Work toward the goal politely and firmly. {fallback}. Accept a final no gracefully.
 - Before ending, get a confirmation number or the representative's name. If they offer to email a confirmation and George's email is in the facts, give it.
 - Short sentences. One question at a time. No chit-chat."""
     return {
         "phone_number": card["number"],
         "task": task,
-        "first_sentence": "Hi, quick heads up, this call may be recorded. This is George's assistant, calling about his account.",
+        "first_sentence": "Hi, this is George. I’m calling about my account.",
         "wait_for_greeting": True,
         "voice": card.get("voice", DEFAULT_VOICE),
         "record": False,
@@ -145,7 +146,7 @@ def report(rec, transcript=False):
     print(f"Called {rec['card']['who']} {rec['card']['number']} — answered by {by}. {fmt_len(d.get('call_length'))}, ${d.get('price') or 0:.2f}.")
     if by == "voicemail":
         print("Voicemail. Nobody picked up. Nothing was left."); return
-    labels = ["Result", "Confirmation", "George must", "Refused a representative"]
+    labels = ["Result", "Confirmation", "George must", "Verification needed"]
     for lab, a in zip(labels, ans):
         print(f"{lab}: {a}")
     if d.get("summary"): print(f"Summary: {d['summary']}")
@@ -166,6 +167,7 @@ def main(argv):
     if dry:
         print(f"TO: {card['who']} {card['number']}  VOICE: {body['voice']}  CAP: {body['max_duration']} min (max ${body['max_duration']*0.14:.2f})")
         print(f"OPENS WITH: {body['first_sentence']}\n"); print(body["task"]); return 0
+    os.makedirs(f"{HOME}/errands", exist_ok=True)
     before = money()
     r = api("POST", "/calls", body)
     cid = r.get("call_id")
@@ -178,6 +180,10 @@ def main(argv):
     ans = answers_for(cid, card) if d.get("answered_by") != "voicemail" else []
     rec = {"card": card, "answers": ans, "call": d, "when": time.strftime("%Y-%m-%d %H:%M %Z")}
     json.dump(rec, open(f"{HOME}/errands/{cid}.json", "w"), indent=1)
+    receipt({"channel": "phone", "provider": "bland", "externalId": cid,
+             "goal": card["goal"], "who": card["who"], "status": d.get("status"),
+             "summary": d.get("summary"), "answers": ans, "cost": d.get("price"),
+             "path": f"{HOME}/errands/{cid}.json"})
     report(rec)
     after = money()
     print(f"Balance left: ${after:.2f} (this call ${before-after:.2f})")
