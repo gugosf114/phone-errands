@@ -8,6 +8,10 @@ fs.mkdirSync(DIR, {recursive:true, mode:0o700});
 function save(job) {
   job.updatedAt = new Date().toISOString();
   const file = path.join(DIR, job.id+'.json');
+  if(fs.existsSync(file)){
+    const saved=JSON.parse(fs.readFileSync(file,'utf8'));
+    job.evidence=[...new Map([...(job.evidence||[]),...(saved.evidence||[])].map(item=>[item.id,item])).values()];
+  }
   fs.writeFileSync(file+'.tmp', JSON.stringify(job,null,2), {mode:0o600});
   fs.renameSync(file+'.tmp',file);
 }
@@ -21,7 +25,7 @@ function create(task, context, target) {
   const job = {id,task,target,callId:call.id || null,controlUrl:call.monitor?.controlUrl || null,
     state:'queued',delivery:'pending',createdAt:new Date().toISOString(),
     origin:context.origin || (call.id?'voice':'terminal'),channel:context.channel || 'auto',
-    card:context.card || null,evidence:[],recentMessages:context.recentMessages || []};
+    threadId:context.threadId || 'main',card:context.card || null,evidence:[],recentMessages:context.recentMessages || []};
   save(job); return {job,existing:false};
 }
 function apiKey() {

@@ -13,6 +13,9 @@ from assistant_records import receipt
 from voice_catalog import resolve_call_voice
 from speech_text import SPEECH_GUIDANCE, pronunciation_guide
 from profile_store import enrich, handoff, behavior
+from gap_learning import learn_safely as learn
+from call_extensions import extend_request
+from conference_client import register as register_conference,wait_result
 
 BASE = "https://api.bland.ai/v1"
 HOME = "/root/.bland"
@@ -142,6 +145,7 @@ def main(argv):
     if len(questions) > 4:
         print("max 4 questions — people hang up after that"); return 2
     body = build_request(number, who, questions)
+    body=extend_request(body,preview=dry)
     if dry:
         print(json.dumps(body, indent=1)); return 0
     os.makedirs(f"{HOME}/calls", exist_ok=True)
@@ -152,14 +156,17 @@ def main(argv):
         print("Bland refused the call:", json.dumps(r)); return 1
     open(f"{HOME}/last_call_id", "w").write(cid)
     print(f"Dialing {who} {number} … (call {cid[:8]})", flush=True)
-    d = wait_done(cid)
-    ans = answers_for(cid, who, questions) if d.get("answered_by") != "voicemail" else []
+    receipt({"channel":"phone","provider":"bland","externalId":cid,"status":"started","goal":"; ".join(questions),"who":who})
+    register_conference(body,cid,api)
+    d = wait_result(cid,wait_done,api)
+    learned=learn(dict(d,call_id=cid),company=who)
+    ans = answers_for(d.get("analysis_call_id",cid), who, questions) if d.get("answered_by") != "voicemail" else []
     rec = {"number": number, "who": who, "questions": questions, "answers": ans, "call": d,
            "when": time.strftime("%Y-%m-%d %H:%M %Z")}
     json.dump(rec, open(f"{HOME}/calls/{cid}.json", "w"), indent=1)
     receipt({"channel": "phone", "provider": "bland", "externalId": cid,
              "goal": "; ".join(questions), "who": who, "status": d.get("status"),
-             "summary": d.get("summary"), "answers": ans, "cost": d.get("price"),
+             "summary": d.get("summary"), "answers": ans, "cost": d.get("price"), "learnedRequirements": learned,
              "path": f"{HOME}/calls/{cid}.json"})
     report(rec)
     after = money()

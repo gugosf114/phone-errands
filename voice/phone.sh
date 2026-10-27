@@ -19,9 +19,15 @@ room_alive(){ local r; r=$(active_room); [ -n "$r" ] && tmux has-session -t "$r"
 ensure_room(){
   room_alive && return 0
   # no live active room -> open a default one named 'brain' (no attach)
-  local uuid name=brain; uuid=$(cat /proc/sys/kernel/random/uuid); local jsonl="$PROJ/$uuid.jsonl"
+  local uuid name=brain resume=--session-id; uuid=$(cat /proc/sys/kernel/random/uuid); local jsonl="$PROJ/$uuid.jsonl"
+  if [ "$(active_room)" = brain ]; then
+    local saved; saved=$(sed -n '2p' active.txt)
+    if [[ "$saved" =~ ^/root/\.claude/projects/-root/([a-f0-9-]{36})\.jsonl$ ]] && [ -s "$saved" ]; then
+      uuid="${BASH_REMATCH[1]}"; jsonl="$saved"; resume=--resume
+    fi
+  fi
   tmux kill-session -t "$name" 2>/dev/null
-  tmux new-session -d -s "$name" -x 210 -y 55 "$(debian_cmd bash -lc "cd /root && IS_SANDBOX=1 $CLAUDE --dangerously-skip-permissions --model claude-sonnet-5-5 --session-id $uuid -n $name")"
+  tmux new-session -d -s "$name" -x 210 -y 55 "$(debian_cmd bash -lc "cd /root && IS_SANDBOX=1 $CLAUDE --dangerously-skip-permissions --model claude-sonnet-5-5 --settings /root/.local/share/phone-errands/config/claude-voice-settings.json $resume $uuid -n $name")"
   local i
   for i in $(seq 1 40); do
     local pane; pane=$(tmux capture-pane -p -t "$name" 2>/dev/null)
@@ -101,6 +107,13 @@ case "${1:-status}" in
   call) python3 "$DIR/place_call.py" --assistant "$AID" --to "$CELL" ;;
   attach) exec tmux attach -t "$(active_room)" ;;
   off) python3 "$DIR/service.py" stop || exit 1; rm -f /root/.vapi/bridge/WANTED; tmux kill-session -t vsrv 2>/dev/null; tmux kill-session -t vtun 2>/dev/null; echo "LINE OFF (rooms left open; auto-return disabled)";;
+  refresh-brain)
+    if python3 "$DIR/service.py" brain-needs-refresh; then
+      python3 "$DIR/service.py" stop-brain || exit 1
+      tmux kill-session -t brain 2>/dev/null
+      ensure_room
+    fi
+    ;;
   restart)
     python3 "$DIR/service.py" stop || exit 1
     tmux kill-session -t vsrv 2>/dev/null

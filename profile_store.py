@@ -6,6 +6,8 @@ import os
 from pathlib import Path
 import re
 import sys
+from gap_learning import requirements
+from conference_client import conference_number
 
 ROOT = Path(__file__).resolve().parent
 DATA = Path(os.environ.get('ASSISTANT_PROFILE_DIR', '/root/.local/state/phone-errands'))
@@ -92,7 +94,8 @@ def context(card=None, verification=False):
             if key in selected:sources[key]='Account '+card['account']+' identity override'
     for key in card.get('identity',{}):
         if key in selected:sources[key]='Current goal card identity override'
-    return {'identity':selected,'sources':sources,'missingFields':[key for key in fields if identity.get(key) in (None,'')],
+    learned=requirements(card.get('account') or re.sub(r'[^a-z0-9]+','-',str(card.get('who') or '').lower()).strip('-')[:64])
+    return {'identity':selected,'sources':sources,'learnedRequirements':learned,'missingFields':[key for key in fields if identity.get(key) in (None,'')],
             'account':company,'behavior':behavior()}
 
 
@@ -125,9 +128,9 @@ def handoff():
         if not phone:raise ValueError('The shared profile needs the handoff phone number.')
         text=('Current phone stage: handle automated menus and AI agents. Determine from the greeting whether the other side is automated or a live person. '
               'If unclear, ask one brief question. When a live person answers, say exactly: "'+rules['handoffLine']+'" '
-              'Then transfer the call to '+phone+'. Use the transfer action immediately so George takes over. '
+              'Then use the configured transfer action immediately so George takes over. '
               'This handoff takes precedence over continuing the questions or errand with the person.')
-        return {'transfer_phone_number':phone},text
+        return {'transfer_phone_number':conference_number() or phone},text
     return {},'Phone conversations may continue with automated systems and people.'
 
 

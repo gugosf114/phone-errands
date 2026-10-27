@@ -9,7 +9,7 @@ NAME="${1:-v$(date +%H%M%S)}"
 UUID=$(cat /proc/sys/kernel/random/uuid); JSONL="$PROJ/$UUID.jsonl"
 pause(){ timeout $(( ${1:-1000}/1000 + 2 )) node -e 'setTimeout(()=>process.exit(0),'"${1:-1000}"')' 2>/dev/null; }
 tmux kill-session -t "$NAME" 2>/dev/null
-printf -v VOICE_CMD '%q ' bash -lc "cd /root && IS_SANDBOX=1 $CLAUDE --dangerously-skip-permissions --model claude-sonnet-5-5 --session-id $UUID -n $NAME"
+printf -v VOICE_CMD '%q ' bash -lc "cd /root && IS_SANDBOX=1 $CLAUDE --dangerously-skip-permissions --model claude-sonnet-5-5 --settings /root/.local/share/phone-errands/config/claude-voice-settings.json --session-id $UUID -n $NAME"
 tmux new-session -d -s "$NAME" -x 210 -y 55 "/data/data/com.termux/files/usr/bin/proot-distro login debian -- $VOICE_CMD"
 for i in $(seq 1 40); do
   pane=$(tmux capture-pane -p -t "$NAME" 2>/dev/null)

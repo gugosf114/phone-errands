@@ -6,6 +6,7 @@ from pathlib import Path
 import signal
 import sys
 import time
+import uuid
 import urllib.request
 
 BRIDGE = Path('/root/.vapi/bridge')
@@ -57,11 +58,61 @@ def stop():
     raise RuntimeError('The old bridge process is still running.')
 
 
+def brain_processes():
+    lines = (BRIDGE / 'active.txt').read_text().splitlines()
+    if len(lines) < 2 or lines[0] != 'brain':
+        return []
+    session_id = str(uuid.UUID(Path(lines[1]).stem))
+    result = []
+    for proc in Path('/proc').iterdir():
+        if not proc.name.isdigit():
+            continue
+        try:
+            args = proc.joinpath('cmdline').read_bytes().decode().split('\0')
+            if not any('claude' in arg.rsplit('/', 1)[-1] for arg in args[:2]):
+                continue
+            if any(args[i] in ['--session-id', '--resume'] and args[i+1] == session_id for i in range(len(args)-1)):
+                result.append((int(proc.name), args))
+        except (FileNotFoundError, PermissionError, UnicodeError):
+            continue
+    return result
+
+
+def refresh_needed():
+    settings = '/root/.local/share/phone-errands/config/claude-voice-settings.json'
+    processes = brain_processes()
+    return bool(processes) and any(settings not in args for _, args in processes)
+
+
+def stop_brain():
+    try:
+        live = status()
+        if live.get('busy') or live.get('queued'):
+            raise RuntimeError('Finish the personal brain job before refreshing its chat hook.')
+    except (OSError, ValueError):
+        pass
+    for pid, _ in brain_processes():
+        try:
+            os.kill(pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+    deadline = time.monotonic() + 6
+    while time.monotonic() < deadline:
+        if not brain_processes():
+            return
+        time.sleep(0.1)
+    raise RuntimeError('The managed brain is still running; its replacement was not started.')
+
+
 if __name__ == '__main__':
     try:
         command = sys.argv[1] if len(sys.argv) > 1 else 'status'
         if command == 'stop':
             stop()
+        elif command == 'brain-needs-refresh':
+            sys.exit(0 if refresh_needed() else 1)
+        elif command == 'stop-brain':
+            stop_brain()
         elif command == 'healthy':
             live = status()
             expected = (BRIDGE / 'REVISION').read_text().strip()

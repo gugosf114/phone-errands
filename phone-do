@@ -27,6 +27,9 @@ from assistant_records import receipt
 from voice_catalog import resolve_call_voice
 from speech_text import SPEECH_GUIDANCE, pronunciation_guide
 from profile_store import enrich, handoff, behavior
+from gap_learning import learn_safely as learn
+from call_extensions import extend_request
+from conference_client import register as register_conference,wait_result
 
 BASE = "https://api.bland.ai/v1"
 HOME = "/root/.bland"
@@ -182,6 +185,7 @@ def main(argv):
     path = argv[1] if dry else argv[0]
     card = parse_card(path)
     body = build_request(card)
+    body=extend_request(body,preview=dry)
     if dry:
         print(f"TO: {card['who']} {card['number']}  VOICE: {body['voice']}  CAP: {body['max_duration']} min (max ${body['max_duration']*0.14:.2f})")
         print(f"OPENS WITH: {body.get('first_sentence', 'Chosen after the greeting; live people receive the saved handoff line')}\n"); print(body["task"]); return 0
@@ -194,13 +198,16 @@ def main(argv):
     open(f"{HOME}/last_errand_id", "w").write(cid)
     open(f"{HOME}/last_call_id", "w").write(cid)
     print(f"Dialing {card['who']} {card['number']} … (call {cid[:8]}, cap {body['max_duration']} min)", flush=True)
-    d = wait_done(cid)
-    ans = answers_for(cid, card) if d.get("answered_by") != "voicemail" else []
+    receipt({"channel":"phone","provider":"bland","externalId":cid,"status":"started","goal":card["goal"],"who":card["who"]})
+    register_conference(body,cid,api)
+    d = wait_result(cid,wait_done,api)
+    learned=learn(dict(d,call_id=cid),account=card.get("account"),company=card["who"])
+    ans = answers_for(d.get("analysis_call_id",cid), card) if d.get("answered_by") != "voicemail" else []
     rec = {"card": card, "answers": ans, "call": d, "when": time.strftime("%Y-%m-%d %H:%M %Z")}
     json.dump(rec, open(f"{HOME}/errands/{cid}.json", "w"), indent=1)
     receipt({"channel": "phone", "provider": "bland", "externalId": cid,
              "goal": card["goal"], "who": card["who"], "status": d.get("status"),
-             "summary": d.get("summary"), "answers": ans, "cost": d.get("price"),
+             "summary": d.get("summary"), "answers": ans, "cost": d.get("price"), "learnedRequirements": learned,
              "path": f"{HOME}/errands/{cid}.json"})
     report(rec)
     after = money()

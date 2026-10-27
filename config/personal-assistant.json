@@ -111,6 +111,119 @@
         "description": "Quick look in George's memory notes about a project, person, or topic. About one second."
       },
       "serverTimeoutSeconds": 10
+    },
+    {
+      "type": "function",
+      "async": false,
+      "function": {
+        "name": "conversation_context",
+        "description": "Read the shared history of George\u2019s selected chat and prior phone calls. Use it when continuing earlier work.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Optional topic to find in older shared messages."
+            }
+          },
+          "required": []
+        }
+      },
+      "serverTimeoutSeconds": 15
+    },
+    {
+      "type": "function",
+      "async": false,
+      "function": {
+        "name": "pending_questions",
+        "description": "Read questions the outgoing caller is waiting for George to answer.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      },
+      "serverTimeoutSeconds": 15
+    },
+    {
+      "type": "function",
+      "async": false,
+      "function": {
+        "name": "answer_question",
+        "description": "Send George\u2019s actual answer to a pending question from the outgoing call.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "question_id": {
+              "type": "string"
+            },
+            "answer": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "question_id",
+            "answer"
+          ]
+        }
+      },
+      "serverTimeoutSeconds": 15
+    },
+    {
+      "type": "function",
+      "async": false,
+      "function": {
+        "name": "call_rooms",
+        "description": "Read active outgoing call rooms and their IDs. Use before controlling a call.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        }
+      },
+      "serverTimeoutSeconds": 30
+    },
+    {
+      "type": "function",
+      "async": false,
+      "function": {
+        "name": "call_control",
+        "description": "Act on George\u2019s explicit request to take over, return, or end an outgoing call. Resume requires his account of the human part. These controls work directly while the brain is busy.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "room_id": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string",
+              "enum": [
+                "takeover",
+                "resume",
+                "end"
+              ]
+            },
+            "summary": {
+              "type": "string",
+              "description": "George\u2019s account of what happened and what the AI should do next."
+            }
+          },
+          "required": [
+            "room_id",
+            "action"
+          ]
+        }
+      },
+      "serverTimeoutSeconds": 30
     }
-  ]
+  ],
+  "eventServer": {
+    "path": "/vapi/events",
+    "events": [
+      "status-update",
+      "conversation-update",
+      "end-of-call-report",
+      "tool-calls"
+    ]
+  }
 }

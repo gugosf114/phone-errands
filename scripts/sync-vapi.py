@@ -37,7 +37,11 @@ def desired(live):
                           'timeoutSeconds': timeout, 'headers': {'X-Line-Key': key}}
         tools.append(tool)
     model['tools'] = tools
-    return {**CONFIG['settings'], 'model': model}
+    patch={**CONFIG['settings'], 'model': model}
+    if CONFIG.get('eventServer'):
+        patch['server']={'url':'https://'+CONFIG['tunnelDomain']+CONFIG['eventServer']['path'],'headers':{'X-Line-Key':key},'timeoutSeconds':10}
+        patch['serverMessages']=CONFIG['eventServer']['events']
+    return patch
 
 
 def main():

@@ -73,7 +73,7 @@ def main():
             for source in (REPO / folder).rglob('*'):
                 if source.is_file() and '__pycache__' not in source.parts:
                     copy(source, SHARE / source.relative_to(REPO))
-        for name in ['phone-ask', 'phone-do', 'assistant', 'support-chat', 'assistant_records.py', 'voice_catalog.py', 'speech_text.py', 'profile_store.py', 'README.md']:
+        for name in ['phone-ask', 'phone-do', 'assistant', 'support-chat', 'assistant_records.py', 'voice_catalog.py', 'speech_text.py', 'profile_store.py', 'gap_learning.py', 'call_extensions.py', 'conference_client.py', 'README.md']:
             copy(REPO / name, SHARE / name, name in ['phone-ask', 'phone-do', 'assistant', 'support-chat'])
         for source in (REPO / 'voice').iterdir():
             if source.is_file():
@@ -102,6 +102,7 @@ def main():
         copy(REPO / 'bin/16-voice-line', BOOT, True)
         (BRIDGE / 'REVISION').write_text(revision + '\n')
         (BRIDGE / 'WANTED').touch()
+        run([PROOT, 'login', 'debian', '--', 'bash', '/root/.vapi/bridge/phone.sh', 'refresh-brain'])
         (BRIDGE / 'MAINTENANCE').unlink()
         if subprocess.run([TMUX, '-L', 'vapi-line', 'has-session', '-t', 'control'], capture_output=True).returncode:
             run([TMUX, '-L', 'vapi-line', 'new-session', '-d', '-s', 'control'])

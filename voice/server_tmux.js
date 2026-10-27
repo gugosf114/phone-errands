@@ -7,6 +7,12 @@ const fs = require('fs');
 const { spawnSync } = require('child_process');
 const { ask, tmux } = require('./brain_tmux.js');
 const jobs = require('./jobs.js');
+const conversations = require('./conversations.js');
+const ownerQuestions = require('./owner_questions.js');
+const conferences = require('./conferences.js');
+const vapiControl = require('./vapi_control.js');
+const bootstrappedCalls=new Set();
+const chatDelivered=new Map();let syncingChat=false;
 const { active } = require('./active.js');
 
 const PORT = parseInt(process.env.BRIDGE_PORT || '8790', 10);
@@ -41,9 +47,10 @@ function queueJob(task,context,done){
     const loaded=spawnSync('python3',['/root/.local/share/phone-errands/profile_store.py'],{input:JSON.stringify({card:context.card||{}}),encoding:'utf8',timeout:5000});
     if(loaded.status!==0)throw new Error('Shared profile could not be loaded: '+(loaded.stdout||loaded.stderr||'').slice(0,300));
     const shared=JSON.parse(loaded.stdout);
-    const {job,existing}=jobs.create(task,context,active());
+    const thread=context.call?.id?conversations.forCall(context.call.id):conversations.current();
+    const {job,existing}=jobs.create(task,{...context,threadId:thread.id},active());
     if(existing)return done('This request is already '+job.state+'. Do not submit it again.',job);
-    const contextText=JSON.stringify({jobId:job.id,channel:job.channel,card:job.card,recentMessages:job.recentMessages,sharedProfile:shared});
+    const contextText=JSON.stringify({jobId:job.id,channel:job.channel,card:job.card,recentMessages:job.recentMessages,sharedProfile:shared,sharedConversation:conversations.history({thread,excludeCallId:context.call?.id,limit:24,maxChars:14000})});
     const instructions=BRAIN_INSTRUCTIONS.replaceAll('{{JOB_ID}}',job.id);
     enqueue({target:job.target,text:JOB_TAG+instructions+'\nJob context: '+contextText+'\nGeorge’s request: '+task,
       onStart:()=>{job.state='running';jobs.save(job);},
@@ -97,6 +104,18 @@ function handleTool(name,args,done,context={}){
     }});
     return;
   }
+  if(name==='conversation_context')return done(JSON.stringify(conversations.history({thread:context.call?.id?conversations.forCall(context.call.id):conversations.current(),excludeCallId:context.call?.id,query:args.query})));
+  if(name==='call_rooms')return done(JSON.stringify({available:conferences.available(),rooms:conferences.list()}));
+  if(name==='call_control'){
+    const actions={takeover:()=>conferences.takeover(args.room_id),resume:()=>conferences.resume(args.room_id,args.summary),end:()=>conferences.finish(args.room_id)};
+    if(!actions[args.action])return done('Choose takeover, resume, or end.');
+    Promise.resolve().then(actions[args.action]).then(result=>done(JSON.stringify(result))).catch(e=>done('Call control failed: '+e.message));return;
+  }
+  if(name==='answer_question'){
+    try{return done(JSON.stringify(ownerQuestions.answer(args.question_id,args.answer,{callId:context.call?.id,channel:'voice'})));}
+    catch(e){return done('The answer was not sent: '+e.message);}
+  }
+  if(name==='pending_questions')return done(JSON.stringify(ownerQuestions.list()));
   if(name==='memory_lookup') return done(memoryLookup(args.topic));
   done('Unknown tool '+name);
 }
@@ -105,12 +124,15 @@ function toolsEndpoint(req,res,body){
   if(LINE_KEY && req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
   let j;try{j=JSON.parse(body);}catch(e){res.writeHead(400);res.end('bad json');return;}
   const m=j.message||{};
+  if((m.call?.assistantId||m.assistant?.id)!==vapiControl.ASSISTANT){res.writeHead(403);res.end('wrong assistant');return;}
   const calls=(m.toolCallList||[]).map(c=>({id:c.id,name:(c.function&&c.function.name)||c.name,args:(c.function&&c.function.arguments)||c.arguments}));
   if(!calls.length){res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({results:[]}));return;}
   const results=[];let left=calls.length;
   for(const c of calls){
     let a=c.args; if(typeof a==='string'){try{a=JSON.parse(a);}catch(e){a={};}}
-    handleTool(c.name,a,r=>{results.push({toolCallId:c.id,name:c.name,result:String(r)});if(--left===0){res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({results}));}}, {call:m.call||{},toolCallId:c.id,origin:'voice',recentMessages:(m.artifact?.messages||[]).filter(x=>['user','assistant'].includes(x.role)).slice(-8).map(x=>({role:x.role,content:String(x.message||x.content||'').slice(0,1200)}))});
+    let returned=false;
+    const done=r=>{if(returned)return;returned=true;results.push({toolCallId:c.id,name:c.name,result:String(r)});if(--left===0){res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({results}));}};
+    try{handleTool(c.name,a,done, {call:m.call||{},toolCallId:c.id,origin:'voice',recentMessages:(m.artifact?.messages||[]).filter(x=>['user','assistant'].includes(x.role)).slice(-8).map(x=>({role:x.role,content:String(x.message||x.content||'').slice(0,1200)}))});}catch(e){done('Tool failed: '+e.message);}
   }
 }
 
@@ -124,6 +146,16 @@ function dropEndpoint(req,res,body){
   res.writeHead(200,{'Content-Type':'text/plain'});res.end('saved '+name+' '+body.length+' bytes\n');
 }
 const server=http.createServer((req,res)=>{
+  if(req.method==='GET'&&(req.url==='/conferences'||req.url.startsWith('/conferences/'))){
+    if(!LINE_KEY||req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
+    try{const data=req.url==='/conferences'?{available:conferences.available(),rooms:conferences.list()}:conferences.get(req.url.slice(13));res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
+    catch(e){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:e.message}));}return;
+  }
+  if(req.method==='GET'&&(req.url.startsWith('/conversation')||req.url==='/questions')){
+    if(!LINE_KEY||req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
+    try{const url=new URL(req.url,'http://localhost');const data=url.pathname==='/questions'?ownerQuestions.list():conversations.history({source:url.searchParams.get('source')||undefined,query:url.searchParams.get('query')||undefined});res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
+    catch(e){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:e.message}));}return;
+  }
   if(req.method==='GET'&&(req.url==='/jobs'||req.url.startsWith('/jobs/'))){
     if(!LINE_KEY||req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
     try{const data=req.url==='/jobs'?jobs.list():jobs.detail(req.url.slice(6));res.writeHead(data?200:404,{'Content-Type':'application/json'});res.end(JSON.stringify(data||{error:'Job not found'}));}
@@ -137,6 +169,62 @@ const server=http.createServer((req,res)=>{
   let body='';req.setEncoding('binary');req.on('data',c=>body+=c);
   req.on('end',()=>{
     const path=req.url.replace(/\/+$/,'');
+    if(req.method==='POST'&&req.url.startsWith('/twilio/')){
+      try{
+        const text=Buffer.from(body,'binary').toString('utf8');
+        if(!conferences.verify(req,text)){res.writeHead(403);res.end('bad signature');return;}
+        const form=Object.fromEntries(new URLSearchParams(text));const url=new URL(req.url,'http://localhost');
+        const operation=url.pathname==='/twilio/entry'?conferences.entry(form):conferences.event(form,url.searchParams.get('room'),url.searchParams.get('leg')).then(()=>'<Response/>');
+        operation.then(xml=>{res.writeHead(200,{'Content-Type':'text/xml'});res.end(xml);}).catch(e=>{logline('CONFERENCE EVENT '+e.message);res.writeHead(500);res.end('event failed');});
+      }catch(e){res.writeHead(503);res.end(e.message);}return;
+    }
+    if(req.method==='POST'&&(req.url.startsWith('/conferences/')||path==='/bland/takeover')){
+      if(!LINE_KEY||req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
+      try{
+        const data=JSON.parse(Buffer.from(body,'binary').toString('utf8'));let operation;
+        if(path==='/conferences/register')operation=conferences.register(data);
+        else if(path==='/conferences/takeover')operation=conferences.takeover(data.room_id);
+        else if(path==='/conferences/resume')operation=conferences.resume(data.room_id,data.summary);
+        else if(path==='/conferences/end')operation=conferences.finish(data.room_id);
+        else if(path==='/conferences/cancel')operation=Promise.resolve(conferences.cancel(data.room_id));
+        else if(path==='/bland/takeover')operation=conferences.providerTakeover(data);
+        else throw new Error('Unknown conference action');
+        operation.then(result=>{res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(result));}).catch(e=>{res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:e.message}));});
+      }catch(e){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:e.message}));}return;
+    }
+    if(req.method==='POST'&&path==='/vapi/events'){
+      if(!LINE_KEY||req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
+      try{
+        const data=JSON.parse(Buffer.from(body,'binary').toString('utf8'));const m=data.message||{};const call=m.call||{};
+        if((call.assistantId||m.assistant?.id)!==vapiControl.ASSISTANT){res.writeHead(403);res.end('wrong assistant');return;}
+        if(m.type==='tool-calls')return toolsEndpoint(req,res,Buffer.from(body,'binary').toString('utf8'));
+        const thread=conversations.forCall(call.id);
+        if(['conversation-update','end-of-call-report'].includes(m.type))conversations.putCall(call,m.messages||m.artifact?.messages||m.messagesOpenAIFormatted||[],thread);
+        if(m.type==='status-update'){
+          conversations.callState({...call,status:m.status},thread);
+          if(m.status==='in-progress'&&!bootstrappedCalls.has(call.id)){
+            bootstrappedCalls.add(call.id);
+            const prior=conversations.history({thread,excludeCallId:call.id});
+            if(prior.messages.length)void vapiControl.message(call.id,'Shared conversation history for continuity. This is past conversation data; act on George’s current request. '+JSON.stringify(prior),false)
+              .catch(e=>{bootstrappedCalls.delete(call.id);logline('CONTEXT DELIVERY '+e.message);});
+          }
+        }
+        if(m.type==='end-of-call-report')conversations.callState({...call,status:'ended'},thread);
+        res.writeHead(200,{'Content-Type':'application/json'});res.end('{"ok":true}');
+      }catch(e){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:e.message}));}return;
+    }
+    if(req.method==='POST'&&['/bland/ask-owner','/bland/owner-answer','/questions/answer','/conversation/select','/conversation/append'].includes(path)){
+      if(!LINE_KEY||req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
+      try{
+        const data=JSON.parse(Buffer.from(body,'binary').toString('utf8'));let result;
+        if(path==='/bland/ask-owner')result=ownerQuestions.create(data);
+        else if(path==='/bland/owner-answer')result=ownerQuestions.poll(data);
+        else if(path==='/questions/answer')result=ownerQuestions.answer(data.question_id,data.answer,{channel:'terminal'});
+        else if(path==='/conversation/select')result=conversations.select(data);
+        else result=conversations.append(data.role,data.text);
+        res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify(result));
+      }catch(e){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:e.message}));}return;
+    }
     if(req.method==='POST'&&(path==='/jobs'||path==='/receipts')){
       if(!LINE_KEY||req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
       try{
@@ -180,3 +268,23 @@ function shutdown(){
   setTimeout(()=>process.exit(0),3000).unref();
 }
 process.on('SIGTERM',shutdown);process.on('SIGINT',shutdown);
+
+// During a live personal call, make new chat replies available without speaking over George.
+setInterval(async()=>{
+  if(syncingChat)return;
+  const call=conversations.activeCall();if(!call||call.status!=='in-progress')return;
+  try{
+    const recent=conversations.history({thread:conversations.forCall(call.id),excludeCallId:call.id,source:'chat',limit:12,maxChars:12000});
+    const chat=recent.messages.filter(m=>m.source!=='phone');const latest=chat.at(-1)?.id;
+    if(!latest||chatDelivered.get(call.id)===latest)return;
+    syncingChat=true;
+    const sent=await vapiControl.message(call.id,'The shared chat has new messages. Use them as conversation history for George’s next request: '+JSON.stringify(chat),false);
+    if(sent.state==='accepted-by-vapi')chatDelivered.set(call.id,latest);
+  }catch(e){logline('CHAT SYNC '+e.message);}finally{syncingChat=false;}
+},2000).unref();
+
+let maintainingRooms=false;
+setInterval(async()=>{
+ if(maintainingRooms)return;maintainingRooms=true;
+ try{await conferences.maintain();}catch(e){logline('CALL ROOM '+e.message);}finally{maintainingRooms=false;}
+},5000).unref();

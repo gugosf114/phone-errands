@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /root/.local/share/phone-errands/scripts/claude-thread-context.py",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}
