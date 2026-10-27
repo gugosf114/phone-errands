@@ -34,6 +34,15 @@ When contacting another person by phone or support chat, the system speaks in fi
 - For an errand, use George’s goal, account facts, and any instructions he gives about spending, plans, timing, or other choices.
 - Save the result and its evidence in the shared job record.
 
+George approved four additional decision rules on October 27, 2026:
+
+1. Keep the effort and cost worth the result.
+2. Respond to what the other side actually says.
+3. Escalate when needed; use the ordinary route for small, routine requests.
+4. Close with a concrete outcome, confirmation, and next step.
+
+The shared behavior, voice prompt, and brain prompt carry these rules. The default phone-errand fallback asks for another useful option and escalates when resolving the request needs additional authority.
+
 The speaking style starts from George’s direct instructions. [config/behavior.json](config/behavior.json) holds those rules and the current phone/chat rollout. A style-examples list is available for approved examples of his wording.
 
 The exact voice instructions are in [prompts/voice.txt](prompts/voice.txt). The brain’s work instructions are in [prompts/brain-errand.md](prompts/brain-errand.md).

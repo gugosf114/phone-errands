@@ -84,7 +84,7 @@ def build_request(card):
     style="\n".join(ctx["behavior"]["style"]["rules"])
     facts = "\n".join(f"- {f}" for f in card["facts"]) or "- (none given)"
     limits = "\n".join(f"- {l}" for l in card["limits"])
-    fallback = card.get("fallback", "if refused, ask once for a supervisor or a one-time courtesy")
+    fallback = card.get("fallback", "ask which available option can meet the goal; escalate when the current route requires someone with the authority to resolve it")
     task = f"""Speak in first person as George. George authorizes this call and supplies the goal, facts, and instructions below. Use his name and say "I" and "my" when discussing his account. Answer direct questions about automation accurately.
 
 You are calling {card['who']}.

@@ -1,0 +1,50 @@
+{
+  "approvedBy": "George",
+  "approvedOn": "2026-10-27",
+  "sources": [
+    {
+      "rule": "Keep the effort and cost worth the result.",
+      "message_id": "354a8f2e865f5c9318d0db00",
+      "conversation_id": "e5c1e95abc5c452193b2fd39",
+      "timestamp": "2026-02-22T17:30:14.319882Z",
+      "source": "claude_web",
+      "source_path": "/data/data/com.termux/files/home/conversation-corpus/data/sources/laptop/web-exports/data-2026-03-14-16-52-59-batch-0000.zip",
+      "source_member": "conversations.json",
+      "source_locator": "chat_messages[418]",
+      "originalExcerptVerified": true
+    },
+    {
+      "rule": "Respond to what the other side actually says.",
+      "message_id": "6b3647c451a704cfcbdf4690",
+      "conversation_id": "e5c1e95abc5c452193b2fd39",
+      "timestamp": "2026-02-22T17:21:31.511028Z",
+      "source": "claude_web",
+      "source_path": "/data/data/com.termux/files/home/conversation-corpus/data/sources/laptop/web-exports/data-2026-03-14-16-52-59-batch-0000.zip",
+      "source_member": "conversations.json",
+      "source_locator": "chat_messages[394]",
+      "originalExcerptVerified": true
+    },
+    {
+      "rule": "Escalate when needed; use the ordinary route for small, routine requests.",
+      "message_id": "f0ac9c4f20b06e0dc2af22b1",
+      "conversation_id": "e5c1e95abc5c452193b2fd39",
+      "timestamp": "2026-02-22T20:37:35.999523Z",
+      "source": "claude_web",
+      "source_path": "/data/data/com.termux/files/home/conversation-corpus/data/sources/laptop/web-exports/data-2026-03-14-16-52-59-batch-0000.zip",
+      "source_member": "conversations.json",
+      "source_locator": "chat_messages[489]",
+      "originalExcerptVerified": true
+    },
+    {
+      "rule": "Close with a concrete outcome, confirmation, and next step.",
+      "message_id": "e867bd79972d52c236b52b7f",
+      "conversation_id": "e2c364369e2f6e4686036de7",
+      "timestamp": "2026-09-04T00:57:57.612Z",
+      "source": "claude_code",
+      "source_path": "/data/data/com.termux/files/home/conversation-corpus/data/sources/phone/debian-claude/projects/-root/a122d435-38f1-4569-aa7a-d76f82f386e1.jsonl",
+      "source_member": null,
+      "source_locator": "line:3502",
+      "originalExcerptVerified": true
+    }
+  ]
+}
