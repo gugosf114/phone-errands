@@ -124,6 +124,9 @@ function dropEndpoint(req,res,body){
   res.writeHead(200,{'Content-Type':'text/plain'});res.end('saved '+name+' '+body.length+' bytes\n');
 }
 const server=http.createServer((req,res)=>{
+  if((req.method==='POST'&&req.url==='/majestic/tts')||(req.method==='GET'&&req.url==='/majestic/health')){
+    require('./majestic_tts.js').handle(req,res,LINE_KEY);return;
+  }
   if(req.method==='GET'&&(req.url==='/jobs'||req.url.startsWith('/jobs/'))){
     if(!LINE_KEY||req.headers['x-line-key']!==LINE_KEY){res.writeHead(401);res.end('no');return;}
     try{const data=req.url==='/jobs'?jobs.list():jobs.detail(req.url.slice(6));res.writeHead(data?200:404,{'Content-Type':'application/json'});res.end(JSON.stringify(data||{error:'Job not found'}));}
