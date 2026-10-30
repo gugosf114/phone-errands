@@ -227,6 +227,8 @@ The number-speaking code derives from WiM Calls’ `sayable` function. It reads 
 
 The Bland account accepted George Natural and rejected a second clone with its account voice-limit response. Majestic George remains available through local synthesis. Bland documents a $5 cumulative wallet top-up to expand clone slots.
 
+The personal bridge also serves the original Majestic George model through an authenticated `/majestic/tts` endpoint for a separate Vapi phone-test assistant. The helper loads the model once and keeps its saved voice settings. [Majestic live-test setup](docs/majestic-live-test.md) describes the audio format, process, and call route.
+
 Both generated previews are saved under `samples/`. [samples/verification.json](samples/verification.json) holds their audio hashes and transcribed words. Their sample text uses example account `0042`, a `$35` charge, and year `2026`. Automated transcription checks the spoken words against that text. Twelve focused checks cover leading zeros, years, money, grouping, call voice selection, and pronunciation-guide construction.
 
 ```sh
