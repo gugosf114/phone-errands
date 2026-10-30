@@ -11,11 +11,16 @@ The helper loads the model once and uses the saved model configuration and
 loopback port 8793 and exits when its parent bridge exits. The model and its
 configuration remain unchanged.
 
-The first test uses a separate Vapi assistant and a free inbound test number.
-The existing Bland caller rings George, then transfers that call to the Vapi
-number. This uses Bland's existing call balance and avoids buying an outbound
-number. The original Ava personal assistant and bakery assistants keep their
-existing configuration.
+The test uses a separate Vapi assistant. The existing Bland caller rings George,
+then transfers that call to a Vapi inbound number. This uses Bland's existing
+call balance and avoids buying an outbound number.
+
+A new free Vapi number can remain in `activating` status. The number must be
+ready before it is used for a test. The first live test instead temporarily
+routed George's existing personal number to the test assistant. Once the test
+call reached Vapi, the number's original Ava routing was restored. The active
+test call keeps its assistant. The original Ava assistant and bakery assistants
+keep their existing configuration.
 
 The baseline test has background sound off and no added filler instructions.
 George judges the sound, response delay, interruptions, and sentence endings.
